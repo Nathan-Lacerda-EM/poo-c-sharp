@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Escolar Manager\\source\\repos\\TrabalhoCalculadora\\TrabalhoCalculadora\\Trabalho.csproj",
+      "projectUniqueName": "C:\\Users\\Escolar Manager\\source\\repos\\TrabalhoCalculadora\\poo-c-sharp\\TrabalhoCalculadora\\Trabalho.csproj",
       "projectName": "Trabalho",
-      "projectPath": "C:\\Users\\Escolar Manager\\source\\repos\\TrabalhoCalculadora\\TrabalhoCalculadora\\Trabalho.csproj",
+      "projectPath": "C:\\Users\\Escolar Manager\\source\\repos\\TrabalhoCalculadora\\poo-c-sharp\\TrabalhoCalculadora\\Trabalho.csproj",
       "packagesPath": "C:\\Users\\Escolar Manager\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Escolar Manager\\source\\repos\\TrabalhoCalculadora\\TrabalhoCalculadora\\obj\\",
+      "outputPath": "C:\\Users\\Escolar Manager\\source\\repos\\TrabalhoCalculadora\\poo-c-sharp\\TrabalhoCalculadora\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Escolar Manager\\AppData\\Roaming\\NuGet\\NuGet.Config",
