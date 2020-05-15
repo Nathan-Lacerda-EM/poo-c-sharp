@@ -1,0 +1,13 @@
+C:\Users\Escolar Manager\source\repos\TrabalhoCalculadora\TrabalhoCalculadora\obj\Debug\netcoreapp3.1\Trabalho.csprojAssemblyReference.cache
+C:\Users\Escolar Manager\source\repos\TrabalhoCalculadora\TrabalhoCalculadora\obj\Debug\netcoreapp3.1\Trabalho.csproj.CoreCompileInputs.cache
+C:\Users\Escolar Manager\source\repos\TrabalhoCalculadora\TrabalhoCalculadora\obj\Debug\netcoreapp3.1\Trabalho.AssemblyInfoInputs.cache
+C:\Users\Escolar Manager\source\repos\TrabalhoCalculadora\TrabalhoCalculadora\obj\Debug\netcoreapp3.1\Trabalho.AssemblyInfo.cs
+C:\Users\Escolar Manager\source\repos\TrabalhoCalculadora\TrabalhoCalculadora\bin\Debug\netcoreapp3.1\Trabalho.exe
+C:\Users\Escolar Manager\source\repos\TrabalhoCalculadora\TrabalhoCalculadora\bin\Debug\netcoreapp3.1\Trabalho.deps.json
+C:\Users\Escolar Manager\source\repos\TrabalhoCalculadora\TrabalhoCalculadora\bin\Debug\netcoreapp3.1\Trabalho.runtimeconfig.json
+C:\Users\Escolar Manager\source\repos\TrabalhoCalculadora\TrabalhoCalculadora\bin\Debug\netcoreapp3.1\Trabalho.runtimeconfig.dev.json
+C:\Users\Escolar Manager\source\repos\TrabalhoCalculadora\TrabalhoCalculadora\bin\Debug\netcoreapp3.1\Trabalho.dll
+C:\Users\Escolar Manager\source\repos\TrabalhoCalculadora\TrabalhoCalculadora\bin\Debug\netcoreapp3.1\Trabalho.pdb
+C:\Users\Escolar Manager\source\repos\TrabalhoCalculadora\TrabalhoCalculadora\obj\Debug\netcoreapp3.1\Trabalho.dll
+C:\Users\Escolar Manager\source\repos\TrabalhoCalculadora\TrabalhoCalculadora\obj\Debug\netcoreapp3.1\Trabalho.pdb
+C:\Users\Escolar Manager\source\repos\TrabalhoCalculadora\TrabalhoCalculadora\obj\Debug\netcoreapp3.1\Trabalho.genruntimeconfig.cache

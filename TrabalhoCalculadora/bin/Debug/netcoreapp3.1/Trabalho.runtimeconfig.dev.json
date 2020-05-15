@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\Escolar Manager\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\Escolar Manager\\.nuget\\packages"
+    ]
+  }
+}
