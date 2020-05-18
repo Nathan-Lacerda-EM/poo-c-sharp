@@ -7,10 +7,10 @@ namespace Trabalho
     {
         public static void Main(string[] args)
         {
-            Calculadora<decimal>.Calcular CalcTeste = new Calculadora<decimal>.Calcular(new Calculadora<decimal>().Add);
-            var v = CalcTeste(79228162M, 1);
+            Calculadora<decimal> CalcTeste = new Calculadora<decimal>();
+            var v = CalcTeste.Add(79228162M, 1);
 
-            var convertido = Convert.ToUInt32(CalcTeste.Target);
+            var convertido = Convert.ToUInt32(CalcTeste);
 
             Calculadora<double> calc = new Calculadora<double>();
             var v1 = calc.Add(20.50, 12.40);
