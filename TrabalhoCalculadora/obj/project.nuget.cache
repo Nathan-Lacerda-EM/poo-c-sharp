@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Fqq4dNqxJBzlXotwGfjktzf4SeRY9ZKCnJ7/I7IdvPteIJmXIh4lx9kT40vL15QnN5DQmfHrdFosiEU088lyAA==",
+  "dgSpecHash": "XE8husVB2iU+4dDyhVOcz/oCwMk+1eI6eRSSvGVTP5pcckgzuMFDw0RyVeP0nFxzzzNVYf/9ZNamAu1U+rNsEw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Escolar Manager\\source\\repos\\TrabalhoCalculadora\\poo-c-sharp\\TrabalhoCalculadora\\Trabalho.csproj",
+  "projectFilePath": "C:\\Users\\Escolar Manager\\source\\repos\\TrabalhoCalculadora\\poo-c-sharp\\TrabalhoCalculadora\\Calculadora.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Escolar Manager\\.nuget\\packages\\microsoft.csharp\\4.0.1\\microsoft.csharp.4.0.1.nupkg.sha512",
     "C:\\Users\\Escolar Manager\\.nuget\\packages\\microsoft.net.test.sdk\\15.0.0\\microsoft.net.test.sdk.15.0.0.nupkg.sha512",

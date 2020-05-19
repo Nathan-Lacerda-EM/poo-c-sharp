@@ -6805,9 +6805,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Escolar Manager\\source\\repos\\TrabalhoCalculadora\\poo-c-sharp\\TrabalhoCalculadora\\Trabalho.csproj",
-      "projectName": "Trabalho",
-      "projectPath": "C:\\Users\\Escolar Manager\\source\\repos\\TrabalhoCalculadora\\poo-c-sharp\\TrabalhoCalculadora\\Trabalho.csproj",
+      "projectUniqueName": "C:\\Users\\Escolar Manager\\source\\repos\\TrabalhoCalculadora\\poo-c-sharp\\TrabalhoCalculadora\\Calculadora.csproj",
+      "projectName": "Calculadora",
+      "projectPath": "C:\\Users\\Escolar Manager\\source\\repos\\TrabalhoCalculadora\\poo-c-sharp\\TrabalhoCalculadora\\Calculadora.csproj",
       "packagesPath": "C:\\Users\\Escolar Manager\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\Escolar Manager\\source\\repos\\TrabalhoCalculadora\\poo-c-sharp\\TrabalhoCalculadora\\obj\\",
       "projectStyle": "PackageReference",
