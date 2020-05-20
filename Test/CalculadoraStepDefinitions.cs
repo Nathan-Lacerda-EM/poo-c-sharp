@@ -98,7 +98,8 @@ namespace Calculadora.Test
         [Then(@"the bool result should be an exception")]
         public void ThenTheBoolResultShouldBeAnException()
         {
-            var exception = Assert.Throws<FormatException>(() => new Calculadora<bool>().Add((bool)valor1, (bool)valor2));
+            var exception = Assert.Throws<FormatException>(() =>
+                new Calculadora<bool>().Add((bool)valor1, (bool)valor2));
             Assert.Equal("Não é possivel fazer essa operação com o formato Boolean.", exception.Message);
         }
 
@@ -117,7 +118,8 @@ namespace Calculadora.Test
         [Then(@"the date result should be an exception")]
         public void ThenTheDateResultShouldBeAnException()
         {
-            var exception = Assert.Throws<FormatException>(() => new Calculadora<DateTime>().Add((DateTime)valor1, (DateTime)valor2));
+            var exception = Assert.Throws<FormatException>(() =>
+                new Calculadora<DateTime>().Add((DateTime)valor1, (DateTime)valor2));
             Assert.Equal("Não é possivel fazer essa operação com o formato DateTime.", exception.Message);
         }
     }
