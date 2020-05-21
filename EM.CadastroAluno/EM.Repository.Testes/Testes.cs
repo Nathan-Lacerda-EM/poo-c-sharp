@@ -6,7 +6,13 @@ namespace EM.Repository.Testes
     public class Testes
     {
         [Fact]
-        public void Test1()
+        public void Adicionar_Um_Aluno_Do_Repositorio()
+        {
+
+        }
+
+        [Fact]
+        public void Remover_Um_Aluno_Do_Repositorio()
         {
 
         }

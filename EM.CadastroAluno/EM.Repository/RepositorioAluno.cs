@@ -8,17 +8,14 @@ namespace EM.Repository
 {
     public class RepositorioAluno : RepositorioAbstrato<Aluno>
     {
+        /*private Object[]
+
+        public RepositorioAluno()
+        {
+            Predicate<Aluno> predicate;
+        }*/
+
         public override void Add(Aluno objeto)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override IEnumerable<Aluno> Get(Expression<Func<Aluno, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override IEnumerable<Aluno> GetAll()
         {
             throw new NotImplementedException();
         }
@@ -29,6 +26,16 @@ namespace EM.Repository
         }
 
         public override void Update(Aluno objeto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IEnumerable<Aluno> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IEnumerable<Aluno> Get(Expression<Func<Aluno, bool>> predicate)
         {
             throw new NotImplementedException();
         }
