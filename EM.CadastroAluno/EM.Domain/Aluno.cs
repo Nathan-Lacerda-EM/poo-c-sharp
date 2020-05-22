@@ -60,8 +60,10 @@ namespace EM.Domain
             {
                 if (ValidaCpf(value))
                     _cpf = LimparCPF(value);
-                else
+                else if (value.Length > 0)
                     throw new ValidationException("CPF inválido!");
+                else
+                    _cpf = value;
             }
         }
 

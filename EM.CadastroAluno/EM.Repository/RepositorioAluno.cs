@@ -20,8 +20,7 @@ namespace EM.Repository
         {
             var alunos =
                 from outroAluno in repositorioAlunos
-                where outroAluno.Equals(aluno)
-                where outroAluno.CPF == aluno.CPF
+                where outroAluno.Equals(aluno) || (aluno.CPF == outroAluno.CPF && aluno.CPF != "Sem CPF." && outroAluno.CPF != "Sem CPF.")
                 select outroAluno;
 
             if (alunos.Count() > 0)
@@ -37,7 +36,7 @@ namespace EM.Repository
                 where outroAluno.Equals(aluno)
                 select outroAluno;
 
-            if (!(alunos.Count() == 0))
+            if (alunos.Count() == 0)
                 throw new Exception("Aluno não encontrado!");
 
             repositorioAlunos.Remove(alunos.Single());
@@ -55,7 +54,7 @@ namespace EM.Repository
 
             var alunosCPF =
                 from a in repositorioAlunos
-                where !a.Equals(aluno) && (aluno.CPF == a.CPF && aluno.CPF != "" && a.CPF != "")
+                where !a.Equals(aluno) && (aluno.CPF == a.CPF && aluno.CPF != "Sem CPF." && a.CPF != "Sem CPF.")
                 select a;
 
             if (alunosCPF.Count() > 0)
@@ -63,7 +62,6 @@ namespace EM.Repository
 
             //repositorioAlunos.Insert(repositorioAlunos.IndexOf(alunos.First()), aluno);
             repositorioAlunos.Remove(alunos.First());
-
             repositorioAlunos.Add(aluno);
         }
 
@@ -73,6 +71,7 @@ namespace EM.Repository
                 from aluno in repositorioAlunos
                 orderby aluno.Matricula
                 select aluno;
+
             if (alunos.Count() > 0)
                 return alunos;
             else
@@ -93,7 +92,7 @@ namespace EM.Repository
                 throw new Exception("Esse aluno não existe!");
         }
 
-        public IEnumerable<Aluno> GetByMatricula(int matricula)
+        public Aluno GetByMatricula(int matricula)
         {
             var alunos =
                 from aluno in repositorioAlunos
@@ -101,7 +100,7 @@ namespace EM.Repository
                 select aluno;
 
             if (alunos.Count() > 0)
-                return alunos;
+                return alunos.First();
             else
                 throw new Exception("Não existe nenhum aluno com essa matrícula!");
         }
