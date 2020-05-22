@@ -36,7 +36,7 @@ namespace EM.Domain.Testes
         public void SetNome_NomeMaiorQue100_RetornaValidationException()
         {
             StringBuilder stringBuilder = new StringBuilder();
-            for (int i = 0; i <= 10; i++)
+            for (int i = 0;i <= 10;i++)
                 stringBuilder.Append("char++++++");
             var exception = Assert.Throws<ValidationException>(() => aluno.Nome = stringBuilder.ToString());
             Assert.Equal("Tamanho de nome deve ser menor ou igual a 100 caracteres.", exception.Message);
@@ -135,7 +135,7 @@ namespace EM.Domain.Testes
             aluno.Nascimento = new DateTime(1999, 7, 5);
             aluno.Sexo = EnumeradorDeSexo.Masculino;
             Aluno newAluno = new Aluno(201800774, "Nathan Lacerda", "48975163075",
-                new DateTime().AddYears(1999).AddMonths(7).AddDays(5), EnumeradorDeSexo.Masculino);
+                new DateTime(1999, 7, 5), EnumeradorDeSexo.Masculino);
             Assert.True(aluno.Equals(newAluno) && newAluno.Equals(aluno));
         }
     }

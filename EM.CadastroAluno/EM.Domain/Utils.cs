@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace EM.Domain
@@ -29,7 +30,7 @@ namespace EM.Domain
 
             soma = 0;
 
-            for (int i = 0; i < 9; i++)
+            for (int i = 0;i < 9;i++)
             {
                 soma += int.Parse(tempCpf[i].ToString()) * (multiplicador1[i]);
             }
@@ -48,7 +49,7 @@ namespace EM.Domain
             tempCpf += digito;
             int soma2 = 0;
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0;i < 10;i++)
             {
                 soma2 += int.Parse(tempCpf[i].ToString()) * multiplicador2[i];
             }
@@ -76,6 +77,18 @@ namespace EM.Domain
         public static string LimparCPF(string CPF)
         {
             return CPF.Trim().Replace(".", "").Replace("-", "");
+        }
+
+        public static string RemoverAcentosEUppercase(string text)
+        {
+            StringBuilder sb = new StringBuilder();
+            var textoArray = text.Normalize(NormalizationForm.FormD).ToCharArray();
+            foreach (char letter in textoArray)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(letter) != UnicodeCategory.NonSpacingMark)
+                    sb.Append(letter);
+            }
+            return sb.ToString().ToLower();
         }
     }
 }
