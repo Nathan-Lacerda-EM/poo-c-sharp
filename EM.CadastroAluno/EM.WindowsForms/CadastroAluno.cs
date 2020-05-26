@@ -243,6 +243,13 @@ namespace EM.WindowsForms
             MessageBox.Show("Digite apenas números na data de nascimento!");
         }
 
+        private void txtMatricula_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (char.IsControl(e.KeyChar) || (e.KeyChar >= 48 && e.KeyChar <= 57))
+                return;
+            e.Handled = true;
+        }
+
         public bool verificarSeEstaTudoPreenchido()
         {
             if (txtNome.TextLength > 0 && txtMatricula.TextLength > 0 &&

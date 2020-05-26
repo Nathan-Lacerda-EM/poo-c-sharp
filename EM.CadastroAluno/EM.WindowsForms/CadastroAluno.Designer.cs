@@ -189,6 +189,8 @@ namespace EM.WindowsForms
             this.txtMatricula.Name = "txtMatricula";
             this.txtMatricula.Size = new System.Drawing.Size(100, 23);
             this.txtMatricula.TabIndex = 1;
+            this.KeyPreview = true;
+            this.txtMatricula.KeyPress += new KeyPressEventHandler(this.txtMatricula_KeyPress);
             // 
             // lblMatricula
             // 
