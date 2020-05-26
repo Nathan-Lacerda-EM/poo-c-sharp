@@ -73,7 +73,7 @@ namespace EM.Domain
         {
             if (CPF != null && CPF.Length > 0)
                 return Convert.ToUInt64(LimparCPF(CPF)).ToString(@"000\.000\.000\-00"); //Obrigado StackOverflow
-            else if(CPF.Equals("Sem CPF."))
+            else if (CPF.Equals("Sem CPF."))
                 return "";
             else
                 return "Sem CPF.";
@@ -81,6 +81,8 @@ namespace EM.Domain
 
         public static string LimparCPF(string CPF)
         {
+            if (CPF.Equals("Sem CPF."))
+                return "";
             return CPF.Trim().Replace(".", "").Replace("-", "");
         }
 

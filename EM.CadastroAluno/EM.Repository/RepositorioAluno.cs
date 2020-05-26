@@ -9,7 +9,7 @@ namespace EM.Repository
 {
     public class RepositorioAluno : RepositorioAbstrato<Aluno>
     {
-        private IList<Aluno> repositorioAlunos;
+        private List<Aluno> repositorioAlunos;
 
         public RepositorioAluno()
         {
@@ -60,7 +60,6 @@ namespace EM.Repository
             if (alunosCPF.Count() > 0)
                 throw new Exception("CPF já registrado!");
 
-            //repositorioAlunos.Insert(repositorioAlunos.IndexOf(alunos.First()), aluno);
             repositorioAlunos.Remove(alunos.First());
             repositorioAlunos.Add(aluno);
         }

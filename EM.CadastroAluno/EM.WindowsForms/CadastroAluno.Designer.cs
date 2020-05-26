@@ -62,7 +62,7 @@ namespace EM.WindowsForms
             this.estadoCadastro.Location = new System.Drawing.Point(10, 10);
             this.estadoCadastro.Margin = new System.Windows.Forms.Padding(0);
             this.estadoCadastro.Name = "estadoCadastro";
-            this.estadoCadastro.Size = new System.Drawing.Size(76, 15);
+            this.estadoCadastro.Size = new System.Drawing.Size(90, 15);
             this.estadoCadastro.TabIndex = 1;
             this.estadoCadastro.Text = "Novo aluno";
             // 
@@ -108,7 +108,7 @@ namespace EM.WindowsForms
             this.btnAddModificar.TabIndex = 7;
             this.btnAddModificar.Text = "Adicionar";
             this.btnAddModificar.UseVisualStyleBackColor = true;
-            this.btnAddModificar.Click += new System.EventHandler(this.btnAddModificar_Click);
+            this.btnAddModificar.Click += new System.EventHandler(this.BtnAddModificar_Click);
             // 
             // btnLimpaCancela
             // 
@@ -132,6 +132,7 @@ namespace EM.WindowsForms
             // 
             // cboSexo
             // 
+            this.cboSexo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboSexo.FormattingEnabled = true;
             this.cboSexo.Location = new System.Drawing.Point(8, 77);
             this.cboSexo.Name = "cboSexo";
@@ -163,7 +164,7 @@ namespace EM.WindowsForms
             this.mtbNascimento.TabIndex = 4;
             this.mtbNascimento.MaskInputRejected += new System.Windows.Forms.MaskInputRejectedEventHandler(this.mtbNascimento_MaskInputRejected);
             this.mtbNascimento.Click += new System.EventHandler(this.mtbNascimento_Click);
-            this.mtbNascimento.TextChanged += new System.EventHandler(this.mtbNascimento_Validate);
+            this.mtbNascimento.TextChanged += new System.EventHandler(this.mtbNascimento_TextChanged);
             // 
             // lblNome
             // 
@@ -189,8 +190,8 @@ namespace EM.WindowsForms
             this.txtMatricula.Name = "txtMatricula";
             this.txtMatricula.Size = new System.Drawing.Size(100, 23);
             this.txtMatricula.TabIndex = 1;
-            this.KeyPreview = true;
-            this.txtMatricula.KeyPress += new KeyPressEventHandler(this.txtMatricula_KeyPress);
+            this.txtMatricula.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtMatricula.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtMatricula_KeyPress);
             // 
             // lblMatricula
             // 
@@ -212,6 +213,7 @@ namespace EM.WindowsForms
             this.dgvAlunos.Margin = new System.Windows.Forms.Padding(3, 0, 3, 5);
             this.dgvAlunos.MultiSelect = false;
             this.dgvAlunos.Name = "dgvAlunos";
+            this.dgvAlunos.ReadOnly = true;
             this.dgvAlunos.RowHeadersVisible = false;
             this.dgvAlunos.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgvAlunos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -274,6 +276,7 @@ namespace EM.WindowsForms
             this.Controls.Add(this.pnlCadastro);
             this.Controls.Add(this.estadoCadastro);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(527, 383);
             this.Name = "CadastroAluno";
