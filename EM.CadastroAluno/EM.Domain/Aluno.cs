@@ -53,20 +53,6 @@ namespace EM.Domain
             }
         }
 
-        public string CPF
-        {
-            get => FormatarCPF(_cpf);
-            set
-            {
-                if (ValidaCpf(value))
-                    _cpf = LimparCPF(value);
-                else if (value.Length > 0)
-                    throw new ValidationException("CPF inválido!");
-                else
-                    _cpf = value;
-            }
-        }
-
         public DateTime Nascimento
         {
             get => _nascimento;
@@ -84,11 +70,25 @@ namespace EM.Domain
             set => _sexo = value;
         }
 
+        public string CPF
+        {
+            get => FormatarCPF(_cpf);
+            set
+            {
+                if (ValidaCpf(value))
+                    _cpf = LimparCPF(value);
+                else if (value.Length > 0)
+                    throw new ValidationException("CPF inválido!");
+                else
+                    _cpf = "";
+            }
+        }
+
         public override bool Equals(Object obj) => (obj is Aluno aluno && this.Matricula == aluno.Matricula);
 
         public override int GetHashCode() => this.Matricula;
 
         public override string ToString() => $"[Matrícula: {Matricula}], [Nome: \"{Nome}\"], " +
-            $"[CPF: {FormatarCPF(CPF)}], [Nascimento: {Nascimento.ToShortDateString()}],  [Sexo: {Sexo}]";
+            $"[Sexo: {Sexo}], [Nascimento: {Nascimento.ToShortDateString()}], [CPF: {FormatarCPF(CPF)}]";
     }
 }

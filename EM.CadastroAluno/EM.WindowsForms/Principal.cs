@@ -6,13 +6,13 @@ using System.Windows.Forms;
 
 namespace EM.WindowsForms
 {
-    public static class Principal
+    public class Principal : Form
     {
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
-        public static void Main()
+        static void Main()
         {
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
