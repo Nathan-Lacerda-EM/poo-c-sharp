@@ -20,7 +20,8 @@ namespace EM.Repository
         {
             var alunos =
                 from outroAluno in repositorioAlunos
-                where outroAluno.Equals(aluno) || (aluno.CPF == outroAluno.CPF && aluno.CPF != "Sem CPF." && outroAluno.CPF != "Sem CPF.")
+                where outroAluno.Equals(aluno) || (aluno.CPF == outroAluno.CPF && aluno.CPF != "Sem CPF." &&
+                    outroAluno.CPF != "Sem CPF.")
                 select outroAluno;
 
             if (alunos.Count() > 0)
