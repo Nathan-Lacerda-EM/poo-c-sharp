@@ -119,7 +119,7 @@ namespace EM.Domain.Testes
             aluno.Nascimento = new DateTime(1999, 7, 5);
             aluno.Sexo = EnumeradorDeSexo.Masculino;
             Assert.Equal("[Matrícula: 201800774], [Nome: \"Nathan Lacerda\"], " +
-            $"[CPF: 489.751.630-75], [Nascimento: 05/07/1999],  [Sexo: Masculino]", aluno.ToString());
+            $"[Sexo: Masculino], [Nascimento: 05/07/1999], [CPF: 489.751.630-75]", aluno.ToString());
         }
 
         /*
