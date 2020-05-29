@@ -179,8 +179,7 @@ namespace EM.WindowsForms
                 catch (Exception exc)
                 {
                     if (exc.Message.Equals("Não existe nenhum aluno com esse nome!") ||
-                        exc.Message.Equals("Não existe nenhum aluno com essa matrícula!") ||
-                        exc.Message.Equals("Esse aluno não existe!"))
+                        exc.Message.Equals("Não existe nenhum aluno com essa matrícula!"))
                         bs.DataSource = null;
                     else
                     {
