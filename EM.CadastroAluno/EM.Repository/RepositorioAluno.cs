@@ -126,15 +126,11 @@ namespace EM.Repository
         public void SalvarRepositorio()
         {
             var arquivoRepositorio = Path.GetTempPath() + "RepositorioAlunos.txt";
-            var listaSerializada = new StringWriter();
 
-            JSON.Serialize(repositorioAlunos, listaSerializada);
-
-            if(File.Exists(arquivoRepositorio))
-                File.WriteAllText(arquivoRepositorio, listaSerializada.ToString());
-            else
+            using (var listaSerializada = new StringWriter())
             {
-                File.CreateText(arquivoRepositorio);
+                JSON.Serialize(repositorioAlunos, listaSerializada);
+
                 File.WriteAllText(arquivoRepositorio, listaSerializada.ToString());
             }
         }
@@ -142,8 +138,17 @@ namespace EM.Repository
         public List<Aluno> CarregarRepositorio()
         {
             var arquivoRepositorio = Path.GetTempPath() + "RepositorioAlunos.txt";
-            if (File.Exists(arquivoRepositorio))
-                return JSON.Deserialize<List<Aluno>>(new StringReader(File.ReadAllText(arquivoRepositorio)));
+            string listaSerializada = "";
+            List<Aluno> alunos;
+
+            if(File.Exists(arquivoRepositorio))
+                listaSerializada = File.ReadAllText(arquivoRepositorio);
+
+            if (listaSerializada != "")
+            {
+                alunos = JSON.Deserialize<List<Aluno>>(new StringReader(listaSerializada));
+                return alunos;
+            }
             else
                 return null;
         }
