@@ -227,6 +227,7 @@ namespace EM.WindowsForms
             this.dgvAlunos.ShowEditingIcon = false;
             this.dgvAlunos.Size = new System.Drawing.Size(485, 125);
             this.dgvAlunos.TabIndex = 4;
+            this.dgvAlunos.CellDoubleClick += new DataGridViewCellEventHandler(this.dgvAluno_CellDoubleClick);
             // 
             // btnPesquisa
             // 

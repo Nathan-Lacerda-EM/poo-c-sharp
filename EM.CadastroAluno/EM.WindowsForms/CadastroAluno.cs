@@ -33,7 +33,6 @@ namespace EM.WindowsForms
             cboSexo.Items.Add(EnumeradorDeSexo.Feminino);
 
             SetupDGVAlunos();
-
             AtualizarDataGridView();
         }
 
@@ -226,6 +225,11 @@ namespace EM.WindowsForms
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 txtPesquisa.Focus();
             }
+        }
+
+        private void dgvAluno_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            btnEditar_Click(sender, e);
         }
 
         private void mtbNascimento_Click(object sender, EventArgs e)
