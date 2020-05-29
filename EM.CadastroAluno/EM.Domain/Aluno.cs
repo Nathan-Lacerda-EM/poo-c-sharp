@@ -59,8 +59,9 @@ namespace EM.Domain
             set
             {
                 const int anoMinimo = 1900;
+                const int zero = 0;
                 if (value.CompareTo(DateTime.Today) <= 0 && value.Year >= anoMinimo)
-                    _nascimento = value;
+                    _nascimento = new DateTime(value.Year, value.Month, value.Day, zero, zero, zero);
                 else if(value.Year < anoMinimo)
                     throw new ValidationException("Ano deve ser maior que 1900!");
                 else
