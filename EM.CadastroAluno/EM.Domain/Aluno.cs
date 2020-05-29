@@ -58,10 +58,12 @@ namespace EM.Domain
             get => _nascimento;
             set
             {
-                if (value.CompareTo(DateTime.Today) < 0)
+                if (value.CompareTo(DateTime.Today) <= 0 && value.Year >= 1900)
                     _nascimento = value;
+                else if(value.Year < 1900)
+                    throw new ValidationException("Ano deve ser maior que 1900!");
                 else
-                    throw new ValidationException("Data deve ser anterior ao dia de hoje!");
+                    throw new ValidationException("Data deve ser igual ou anterior ao dia de hoje!");
             }
         }
         public EnumeradorDeSexo Sexo
@@ -89,6 +91,6 @@ namespace EM.Domain
         public override int GetHashCode() => this.Matricula;
 
         public override string ToString() => $"[Matrícula: {Matricula}], [Nome: \"{Nome}\"], " +
-            $"[Sexo: {Sexo}], [Nascimento: {Nascimento.ToShortDateString()}], [CPF: {FormatarCPF(CPF)}]";
+            $"[Sexo: {Sexo}], [Nascimento: {Nascimento.ToShortDateString()}], [CPF: {CPF}]";
     }
 }

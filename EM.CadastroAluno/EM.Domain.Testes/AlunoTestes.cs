@@ -35,10 +35,7 @@ namespace EM.Domain.Testes
         [Fact(DisplayName = "Teste Set Nome maior que 100")]
         public void SetNome_NomeMaiorQue100_RetornaValidationException()
         {
-            StringBuilder stringBuilder = new StringBuilder(); // TIP: new String('0', 101);
-            for (int i = 0;i <= 10;i++)
-                stringBuilder.Append("char++++++");
-            var exception = Assert.Throws<ValidationException>(() => aluno.Nome = stringBuilder.ToString());
+            var exception = Assert.Throws<ValidationException>(() => aluno.Nome = new string('a', 101));
             Assert.Equal("Tamanho de nome deve ser menor ou igual a 100 caracteres.", exception.Message);
         }
 
@@ -57,11 +54,18 @@ namespace EM.Domain.Testes
          * TESTE NASCIMENTO
          */
 
-        [Fact(DisplayName = "Teste Set Nascimento")]
-        public void SetNascimento_NaoEhDataValida_RetornaValidationException()
-        { // TIP: Testar data mínima, data + 1 dia do DateTime.Now
-            var exception = Assert.Throws<ValidationException>(() => aluno.Nascimento = new DateTime(2021, 07, 05));
-            Assert.Equal("Data deve ser anterior ao dia de hoje!", exception.Message);
+        [Fact(DisplayName = "Teste Set Nascimento data maior que hoje")]
+        public void SetNascimentoDataMaior_NaoEhDataValida_RetornaValidationException()
+        {
+            var exception = Assert.Throws<ValidationException>(() => aluno.Nascimento = DateTime.Now.AddDays(1));
+            Assert.Equal("Data deve ser igual ou anterior ao dia de hoje!", exception.Message);
+        }
+
+        [Fact(DisplayName = "Teste Set Nascimento ano menor que 1900")]
+        public void SetNascimentoDataMenor_NaoEhDataValida_RetornaValidationException()
+        {
+            var exception = Assert.Throws<ValidationException>(() => aluno.Nascimento = new DateTime(1899, 12, 31));
+            Assert.Equal("Ano deve ser maior que 1900!", exception.Message);
         }
 
         /*

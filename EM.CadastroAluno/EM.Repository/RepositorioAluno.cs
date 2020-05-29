@@ -105,11 +105,11 @@ namespace EM.Repository
                 throw new Exception("Não existe nenhum aluno com essa matrícula!");
         }
 
-        public IEnumerable<Aluno> GetByContendoNoNome(string parteDonome)
+        public IEnumerable<Aluno> GetByContendoNoNome(string parteDoNome)
         {
             var alunos =
                 from aluno in repositorioAlunos
-                where RemoverAcentosEUppercase(aluno.Nome).Contains(RemoverAcentosEUppercase(parteDonome))
+                where RemoverAcentosEUppercase(aluno.Nome).Contains(RemoverAcentosEUppercase(parteDoNome))
                 select aluno;
 
             if (alunos.Count() > 0)

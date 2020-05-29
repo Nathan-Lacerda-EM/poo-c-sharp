@@ -147,6 +147,7 @@ namespace EM.WindowsForms
             this.txtCPF.Size = new System.Drawing.Size(117, 23);
             this.txtCPF.TabIndex = 5;
             this.txtCPF.KeyDown += new KeyEventHandler(this.txtCadastro_KeyDown);
+            this.txtCPF.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtCPF_KeyPress);
             // 
             // lblNascimento
             // 
@@ -164,10 +165,10 @@ namespace EM.WindowsForms
             this.mtbNascimento.Name = "mtbNascimento";
             this.mtbNascimento.Size = new System.Drawing.Size(80, 23);
             this.mtbNascimento.TabIndex = 4;
-            this.mtbNascimento.MaskInputRejected += new System.Windows.Forms.MaskInputRejectedEventHandler(this.mtbNascimento_MaskInputRejected);
             this.mtbNascimento.Click += new System.EventHandler(this.mtbNascimento_Click);
             this.mtbNascimento.TextChanged += new System.EventHandler(this.mtbNascimento_TextChanged);
             this.mtbNascimento.KeyDown += new KeyEventHandler(this.txtCadastro_KeyDown);
+            this.mtbNascimento.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.mtbNascimento_KeyPress);
             // 
             // lblNome
             // 

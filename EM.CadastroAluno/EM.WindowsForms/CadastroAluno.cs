@@ -8,6 +8,7 @@ using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace EM.WindowsForms
 {
@@ -15,7 +16,6 @@ namespace EM.WindowsForms
     {
         RepositorioAluno repoAluno;
         BindingSource bs;
-        DataTable dt;
 
         public CadastroAluno()
         {
@@ -30,23 +30,15 @@ namespace EM.WindowsForms
 
         private void IniciarControles()
         {
-            // DataGridView, Repository, Binding Source & DataTable.
             repoAluno = new RepositorioAluno();
             bs = new BindingSource();
-            dt = new DataTable();
-            dt.Locale = System.Globalization.CultureInfo.InvariantCulture;
 
-            // Adicionar os dois sexos na ComboBox.
             cboSexo.Items.Add(EnumeradorDeSexo.Masculino);
             cboSexo.Items.Add(EnumeradorDeSexo.Feminino);
 
-            /* Gerar as colunas vazias de acordo com os atributos do objeto Aluno.
-             * E já deixar o método preparado caso for colocar um banco de dados.
-             */
-            AtualizarDataGridView();
+            SetupDGVAlunos();
 
-            // Setar a DataSource da DGV para receber dados da Binding Source.
-            dgvAlunos.DataSource = bs;
+            AtualizarDataGridView();
         }
 
         private void BtnAddModificar_Click(object sender, EventArgs e)
@@ -54,7 +46,8 @@ namespace EM.WindowsForms
             /*
              * Verificar se todos os campos respeitam os requisitos mínimos.
              */
-            if (VerificarTodosOsCampos())
+            var strErroCampos = VerificarPreenchimentoCampos();
+            if (strErroCampos == null)
             {
                 /*
                  * Como estou utilizando o mesmo botão para adicionar e modificar os dados,
@@ -136,7 +129,7 @@ namespace EM.WindowsForms
             }
             else
             {
-                MessageBox.Show("Algum dado está incorreto ou não foi preenchido!", "Cadastro de aluno",
+                MessageBox.Show(strErroCampos, "Validação do cadastro",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -179,43 +172,38 @@ namespace EM.WindowsForms
         {
             if (txtPesquisa.TextLength > 0)
             {
-                var apenasNumero = int.TryParse(txtPesquisa.Text, out int inteiro);
-
-                
-                if (apenasNumero)
-                    bs.Filter = string.Format("convert(Matrícula, 'System.String') LIKE '%"
-                            + inteiro.ToString() + "%'");
-                else
-                    bs.Filter = "Nome LIKE '%" + txtPesquisa.Text + "%' OR CPF LIKE '%" + txtPesquisa.Text + "%'";
-
-                /*
-                var source = bs.DataSource;
-                //source = ((BindingSource)source).DataSource;
-                var table = (DataTable)source;
-
-                for (int i = 0; i < table.Rows.Count; i++)
+                try
                 {
-                    table.Rows[i]["CPF"] = LimparCPF((string)table.Rows[i]["CPF"]);
+                    if (int.TryParse(txtPesquisa.Text, out int inteiro))
+                        bs.DataSource = repoAluno.GetByMatricula(inteiro);
+                    else
+                        bs.DataSource = repoAluno.GetByContendoNoNome(txtPesquisa.Text);
 
-                    var asas = table.Rows[i]["CPF"];
                 }
+                catch (Exception exc)
+                {
+                    if (exc.Message.Equals("Não existe nenhum aluno com esse nome!") ||
+                        exc.Message.Equals("Não existe nenhum aluno com essa matrícula!") ||
+                        exc.Message.Equals("Esse aluno não existe!"))
+                        bs.DataSource = null;
+                    else
+                    {
+                        var result = MessageBox.Show("Ver erro completo?", "Erro desconhecido",
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Error);
 
-                bs.DataSource = table;
-
-                if (apenasNumero)
-                    bs.Filter = string.Format("convert(Matrícula, 'System.String') LIKE '%"
-                            + inteiro.ToString() + "%' OR CPF LIKE '%" + inteiro.ToString() + "%'");
-                else
-                    bs.Filter = "Nome LIKE '%" + txtPesquisa.Text + "%' OR CPF LIKE '%" + LimparCPF(txtPesquisa.Text) + "%'";
-                
-                for (int i = 0; i < table.Rows.Count; i++)
-                    table.Rows[i]["CPF"] = FormatarCPF((string)table.Rows[i]["CPF"]);
-
-                bs.DataSource = table;*/
-
+                        /* 
+                         * Aqui pode ser implementado um relatório de erro
+                         * a ser enviado a equipe de desenvolvimento.
+                         */
+                        if (result == DialogResult.Yes)
+                        {
+                            new TelaErro(exc);
+                        }
+                    }
+                }
             }
             else
-                bs.RemoveFilter();
+                bs.DataSource = repoAluno.GetAll();
         }
 
         private void txtPesquisar_KeyDown(object sender, KeyEventArgs e)
@@ -273,6 +261,7 @@ namespace EM.WindowsForms
                     MessageBox.Show("Data de nascimento não é válida!", "Validação de data de nascimento",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     mtbNascimento.ResetText();
+                    mtbNascimento.Focus();
                     mtbNascimento_Click(sender, e);
                     return;
                 }
@@ -282,22 +271,34 @@ namespace EM.WindowsForms
                     MessageBox.Show("Data de nascimento não pode ser uma data futura!", "Validação de data de nascimento",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     mtbNascimento.ResetText();
+                    mtbNascimento.Focus();
                     mtbNascimento_Click(sender, e);
                 }
             }
         }
 
-        private void mtbNascimento_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
+        private void mtbNascimento_KeyPress(object sender, KeyPressEventArgs e)
         {
-            MessageBox.Show("Digite apenas números na data de nascimento!", "Validação de data de nascimento",
-                MessageBoxButtons.OK, MessageBoxIcon.Error);
-            mtbNascimento_Click(sender, e);
+            if (mtbNascimento.Text.Equals("  /  /"))
+                mtbNascimento.Select(0, 0);
+
+            if (char.IsControl(e.KeyChar) || (e.KeyChar >= 48 && e.KeyChar <= 57))
+                return;
+
+            e.Handled = true;
         }
 
-        /* Restringir apenas números quando o usuário estiver digitando a matrícula */
         private void txtMatricula_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (char.IsControl(e.KeyChar) || (e.KeyChar >= 48 && e.KeyChar <= 57))
+                return;
+            e.Handled = true;
+        }
+
+        private void txtCPF_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (char.IsControl(e.KeyChar) || (e.KeyChar >= 48 && e.KeyChar <= 57) ||
+                e.KeyChar == '.' || e.KeyChar == '-')
                 return;
             e.Handled = true;
         }
@@ -312,39 +313,63 @@ namespace EM.WindowsForms
         {
             try
             {
-                dt = ConvertListToDataTable<Aluno>(repoAluno.GetAll().ToList());
-
-                dt.Columns["Matricula"].ColumnName = "Matrícula";
-
-                bs.RemoveFilter();
-                bs.DataSource = dt;
-
-                dgvAlunos.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-                dgvAlunos.Columns["Nome"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                bs.DataSource = repoAluno.GetAll();
             }
             catch (Exception e)
             {
                 if (e.Message.Equals("Não existe nenhum aluno no repositório!"))
                 {
-                    dt = CreateTable<Aluno>();
-                    bs.DataSource = dt;
-                    dt.Columns["Matricula"].ColumnName = "Matrícula";
+                    bs.DataSource = null;
                 }
                 else
                 {
-                    var result = MessageBox.Show(e.Message, "Erro desconhecido",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    var result = MessageBox.Show("Ver erro completo?", "Erro desconhecido",
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Error);
 
                     /* 
                      * Aqui pode ser implementado um relatório de erro
                      * a ser enviado a equipe de desenvolvimento.
                      */
-                    if (result == DialogResult.OK)
+                    if (result == DialogResult.Yes)
                     {
                         new TelaErro(e);
                     }
                 }
             }
+        }
+
+        public void SetupDGVAlunos()
+        {
+            dgvAlunos.AutoGenerateColumns = false;
+            dgvAlunos.DataSource = bs;
+
+            DataGridViewColumn clmMatricula = new DataGridViewTextBoxColumn();
+            clmMatricula.DataPropertyName = "Matricula";
+            clmMatricula.Name = "Matrícula";
+            dgvAlunos.Columns.Add(clmMatricula);
+
+            DataGridViewColumn clmNome = new DataGridViewTextBoxColumn();
+            clmNome.DataPropertyName = "Nome";
+            clmNome.Name = "Nome";
+            dgvAlunos.Columns.Add(clmNome);
+
+            DataGridViewColumn clmSexo = new DataGridViewTextBoxColumn();
+            clmSexo.DataPropertyName = "Sexo";
+            clmSexo.Name = "Sexo";
+            dgvAlunos.Columns.Add(clmSexo);
+
+            DataGridViewColumn clmNascimento = new DataGridViewTextBoxColumn();
+            clmNascimento.DataPropertyName = "Nascimento";
+            clmNascimento.Name = "Nascimento";
+            dgvAlunos.Columns.Add(clmNascimento);
+
+            DataGridViewColumn clmCPF = new DataGridViewTextBoxColumn();
+            clmCPF.DataPropertyName = "CPF";
+            clmCPF.Name = "CPF";
+            dgvAlunos.Columns.Add(clmCPF);
+
+            dgvAlunos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dgvAlunos.Columns["Nome"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         }
 
         private void SetarCampos(string matricula, string nome, string cpf, int sexo, string nascimento)
@@ -392,47 +417,30 @@ namespace EM.WindowsForms
             mtbNascimento.ResetText();
         }
 
-        public bool VerificarTodosOsCampos()
+        public string VerificarPreenchimentoCampos()
         {
-            if (txtNome.TextLength > 0 && txtMatricula.TextLength > 0 &&
-                (cboSexo.SelectedIndex != -1) &&
-                mtbNascimento.TextLength == 10)
-                return true;
+            if (!(txtMatricula.TextLength > 0))
+            {
+                txtMatricula.Focus();
+                return "Matrícula deve ser maior que 0!";
+            }
+            else if (!(txtNome.TextLength > 0))
+            {
+                txtNome.Focus();
+                return "Nome não pode estar vazio!";
+            }
+            else if (cboSexo.SelectedIndex == -1)
+            {
+                cboSexo.Focus();
+                return "Selecione um sexo!";
+            }
+            else if (mtbNascimento.Text.Replace(" ", "").Length != 10)
+            {
+                mtbNascimento.Focus();
+                return "Digite a data de nascimento completa!";
+            }
             else
-                return false;
-        }
-
-        public static DataTable ConvertListToDataTable<T>(IList<T> list)
-        {
-            DataTable table = CreateTable<T>();
-            Type entityType = typeof(T);
-            PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(entityType);
-
-            foreach (T item in list)
-            {
-                DataRow row = table.NewRow();
-
-                foreach (PropertyDescriptor prop in properties)
-                {
-                    row[prop.Name] = prop.GetValue(item);
-                }
-
-                table.Rows.Add(row);
-            }
-            return table;
-        }
-
-        public static DataTable CreateTable<T>()
-        {
-            Type entityType = typeof(T);
-            DataTable table = new DataTable(entityType.Name);
-            PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(entityType);
-
-            foreach (PropertyDescriptor prop in properties)
-            {
-                table.Columns.Add(prop.Name, prop.PropertyType);
-            }
-            return table;
+                return null;
         }
     }
 }
