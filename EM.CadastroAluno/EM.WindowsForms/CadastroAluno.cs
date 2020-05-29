@@ -21,10 +21,6 @@ namespace EM.WindowsForms
         {
             InitializeComponent();
 
-            /*
-             * Aqui iniciamos os construtores do repositório, BindingSource, DataTable, ComboBox
-             * além da DataGridView e algumas configurações.
-             */
             IniciarControles();
         }
 
@@ -41,7 +37,7 @@ namespace EM.WindowsForms
             AtualizarDataGridView();
         }
 
-        private void BtnAddModificar_Click(object sender, EventArgs e)
+        private void btnAddModificar_Click(object sender, EventArgs e)
         {
             /*
              * Verificar se todos os campos respeitam os requisitos mínimos.
@@ -51,7 +47,7 @@ namespace EM.WindowsForms
             {
                 /*
                  * Como estou utilizando o mesmo botão para adicionar e modificar os dados,
-                 * faço a verificação do nome do botão por if mesmo e 
+                 * faço a verificação do nome do botão por if mesmo.
                  */
                 if (btnAddModificar.Text.Equals("Adicionar"))
                 {
@@ -215,7 +211,7 @@ namespace EM.WindowsForms
         private void txtCadastro_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
-                BtnAddModificar_Click(this, new EventArgs());
+                btnAddModificar_Click(this, new EventArgs());
         }
 
         private void btnExcluir_Click(object sender, EventArgs e)

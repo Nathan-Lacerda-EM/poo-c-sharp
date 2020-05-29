@@ -108,7 +108,7 @@ namespace EM.WindowsForms
             this.btnAddModificar.TabIndex = 7;
             this.btnAddModificar.Text = "Adicionar";
             this.btnAddModificar.UseVisualStyleBackColor = true;
-            this.btnAddModificar.Click += new System.EventHandler(this.BtnAddModificar_Click);
+            this.btnAddModificar.Click += new System.EventHandler(this.btnAddModificar_Click);
             // 
             // btnLimpaCancela
             // 
