@@ -48,10 +48,10 @@ namespace EM.WindowsForms
             this.txtMatricula = new System.Windows.Forms.TextBox();
             this.lblMatricula = new System.Windows.Forms.Label();
             this.dgvAlunos = new System.Windows.Forms.DataGridView();
-            this.btnPesquisa = new System.Windows.Forms.Button();
             this.txtPesquisa = new System.Windows.Forms.TextBox();
             this.btnExcluir = new System.Windows.Forms.Button();
             this.btnEditar = new System.Windows.Forms.Button();
+            this.lblPesquisa = new System.Windows.Forms.Label();
             this.pnlCadastro.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlunos)).BeginInit();
             this.SuspendLayout();
@@ -138,7 +138,7 @@ namespace EM.WindowsForms
             this.cboSexo.Name = "cboSexo";
             this.cboSexo.Size = new System.Drawing.Size(100, 23);
             this.cboSexo.TabIndex = 3;
-            this.cboSexo.KeyDown += new KeyEventHandler(this.txtCadastro_KeyDown);
+            this.cboSexo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtCadastro_KeyDown);
             // 
             // txtCPF
             // 
@@ -146,7 +146,7 @@ namespace EM.WindowsForms
             this.txtCPF.Name = "txtCPF";
             this.txtCPF.Size = new System.Drawing.Size(117, 23);
             this.txtCPF.TabIndex = 5;
-            this.txtCPF.KeyDown += new KeyEventHandler(this.txtCadastro_KeyDown);
+            this.txtCPF.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtCadastro_KeyDown);
             this.txtCPF.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtCPF_KeyPress);
             // 
             // lblNascimento
@@ -167,7 +167,7 @@ namespace EM.WindowsForms
             this.mtbNascimento.TabIndex = 4;
             this.mtbNascimento.Click += new System.EventHandler(this.mtbNascimento_Click);
             this.mtbNascimento.TextChanged += new System.EventHandler(this.mtbNascimento_TextChanged);
-            this.mtbNascimento.KeyDown += new KeyEventHandler(this.txtCadastro_KeyDown);
+            this.mtbNascimento.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtCadastro_KeyDown);
             this.mtbNascimento.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.mtbNascimento_KeyPress);
             // 
             // lblNome
@@ -186,7 +186,7 @@ namespace EM.WindowsForms
             this.txtNome.Name = "txtNome";
             this.txtNome.Size = new System.Drawing.Size(361, 23);
             this.txtNome.TabIndex = 2;
-            this.txtNome.KeyDown += new KeyEventHandler(this.txtCadastro_KeyDown);
+            this.txtNome.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtCadastro_KeyDown);
             // 
             // txtMatricula
             // 
@@ -196,8 +196,8 @@ namespace EM.WindowsForms
             this.txtMatricula.Size = new System.Drawing.Size(100, 23);
             this.txtMatricula.TabIndex = 1;
             this.txtMatricula.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtMatricula.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtCadastro_KeyDown);
             this.txtMatricula.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtMatricula_KeyPress);
-            this.txtMatricula.KeyDown += new KeyEventHandler(this.txtCadastro_KeyDown);
             // 
             // lblMatricula
             // 
@@ -215,7 +215,7 @@ namespace EM.WindowsForms
             this.dgvAlunos.AllowUserToResizeColumns = false;
             this.dgvAlunos.AllowUserToResizeRows = false;
             this.dgvAlunos.BackgroundColor = System.Drawing.SystemColors.Window;
-            this.dgvAlunos.Location = new System.Drawing.Point(13, 174);
+            this.dgvAlunos.Location = new System.Drawing.Point(13, 188);
             this.dgvAlunos.Margin = new System.Windows.Forms.Padding(3, 0, 3, 5);
             this.dgvAlunos.MultiSelect = false;
             this.dgvAlunos.Name = "dgvAlunos";
@@ -225,28 +225,17 @@ namespace EM.WindowsForms
             this.dgvAlunos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvAlunos.ShowCellToolTips = false;
             this.dgvAlunos.ShowEditingIcon = false;
-            this.dgvAlunos.Size = new System.Drawing.Size(485, 125);
+            this.dgvAlunos.Size = new System.Drawing.Size(485, 116);
             this.dgvAlunos.TabIndex = 4;
-            // 
-            // btnPesquisa
-            // 
-            this.btnPesquisa.Location = new System.Drawing.Point(423, 148);
-            this.btnPesquisa.Margin = new System.Windows.Forms.Padding(1, 3, 3, 0);
-            this.btnPesquisa.Name = "btnPesquisa";
-            this.btnPesquisa.Size = new System.Drawing.Size(75, 23);
-            this.btnPesquisa.TabIndex = 3;
-            this.btnPesquisa.Text = "Pesquisar";
-            this.btnPesquisa.UseVisualStyleBackColor = true;
-            this.btnPesquisa.Click += new System.EventHandler(this.btnPesquisar_Click);
             // 
             // txtPesquisa
             // 
-            this.txtPesquisa.Location = new System.Drawing.Point(13, 148);
+            this.txtPesquisa.Location = new System.Drawing.Point(13, 163);
             this.txtPesquisa.Margin = new System.Windows.Forms.Padding(3, 3, 1, 2);
             this.txtPesquisa.Name = "txtPesquisa";
-            this.txtPesquisa.Size = new System.Drawing.Size(408, 23);
+            this.txtPesquisa.Size = new System.Drawing.Size(485, 23);
             this.txtPesquisa.TabIndex = 2;
-            this.txtPesquisa.KeyDown += new KeyEventHandler(this.txtPesquisar_KeyDown);
+            this.txtPesquisa.TextChanged += new System.EventHandler(this.txtPesquisar_TextChanged);
             // 
             // btnExcluir
             // 
@@ -261,7 +250,7 @@ namespace EM.WindowsForms
             // 
             // btnEditar
             // 
-            this.btnEditar.Location = new System.Drawing.Point(346, 312);
+            this.btnEditar.Location = new System.Drawing.Point(344, 312);
             this.btnEditar.Margin = new System.Windows.Forms.Padding(3, 3, 2, 3);
             this.btnEditar.Name = "btnEditar";
             this.btnEditar.Size = new System.Drawing.Size(75, 23);
@@ -270,15 +259,25 @@ namespace EM.WindowsForms
             this.btnEditar.UseVisualStyleBackColor = true;
             this.btnEditar.Click += new System.EventHandler(this.btnEditar_Click);
             // 
+            // lblPesquisa
+            // 
+            this.lblPesquisa.AutoSize = true;
+            this.lblPesquisa.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblPesquisa.Location = new System.Drawing.Point(10, 145);
+            this.lblPesquisa.Name = "lblPesquisa";
+            this.lblPesquisa.Size = new System.Drawing.Size(238, 15);
+            this.lblPesquisa.TabIndex = 7;
+            this.lblPesquisa.Text = "Pesquisar por parte do nome ou matrícula";
+            // 
             // CadastroAluno
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(511, 344);
+            this.Controls.Add(this.lblPesquisa);
             this.Controls.Add(this.btnEditar);
             this.Controls.Add(this.btnExcluir);
             this.Controls.Add(this.txtPesquisa);
-            this.Controls.Add(this.btnPesquisa);
             this.Controls.Add(this.dgvAlunos);
             this.Controls.Add(this.pnlCadastro);
             this.Controls.Add(this.estadoCadastro);
@@ -315,10 +314,10 @@ namespace EM.WindowsForms
         private System.Windows.Forms.Button btnLimpaCancela;
         private System.Windows.Forms.Label lblSexo;
         private System.Windows.Forms.DataGridView dgvAlunos;
-        private System.Windows.Forms.Button btnPesquisa;
         private System.Windows.Forms.TextBox txtPesquisa;
         private System.Windows.Forms.Button btnExcluir;
         private System.Windows.Forms.Button btnEditar;
+        private Label lblPesquisa;
     }
 }
 

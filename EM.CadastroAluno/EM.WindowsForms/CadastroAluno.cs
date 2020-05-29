@@ -168,7 +168,7 @@ namespace EM.WindowsForms
          * ficaria melhor e mais confortável, já que não teria que clicar toda vez
          * no botão Pesquisar para atualizar a Grid.
          */
-        private void btnPesquisar_Click(object sender, EventArgs e)
+        private void txtPesquisar_TextChanged(object sender, EventArgs e)
         {
             if (txtPesquisa.TextLength > 0)
             {
@@ -204,12 +204,6 @@ namespace EM.WindowsForms
             }
             else
                 bs.DataSource = repoAluno.GetAll();
-        }
-
-        private void txtPesquisar_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                btnPesquisar_Click(this, new EventArgs());
         }
 
         private void txtCadastro_KeyDown(object sender, KeyEventArgs e)
@@ -388,7 +382,6 @@ namespace EM.WindowsForms
                 txtPesquisa.Enabled = false;
                 btnExcluir.Enabled = false;
                 btnEditar.Enabled = false;
-                btnPesquisa.Enabled = false;
             }
             else
             {
@@ -399,7 +392,6 @@ namespace EM.WindowsForms
                 txtPesquisa.Enabled = true;
                 btnExcluir.Enabled = true;
                 btnEditar.Enabled = true;
-                btnPesquisa.Enabled = true;
                 LimparFormulario();
             }
         }
