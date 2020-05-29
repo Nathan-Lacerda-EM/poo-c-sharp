@@ -201,18 +201,6 @@ namespace EM.WindowsForms
                 bs.DataSource = repoAluno.GetAll();
         }
 
-        private void txtPesquisar_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                btnPesquisar_Click(this, new EventArgs());
-        }
-
-        private void txtCadastro_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                btnAddModificar_Click(this, new EventArgs());
-        }
-
         private void btnExcluir_Click(object sender, EventArgs e)
         {
             if (dgvAlunos.CurrentRow == null)
@@ -270,6 +258,18 @@ namespace EM.WindowsForms
                     mtbNascimento_Click(sender, e);
                 }
             }
+        }
+
+        private void txtPesquisar_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                btnPesquisar_Click(this, new EventArgs());
+        }
+
+        private void txtCadastro_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                btnAddModificar_Click(this, new EventArgs());
         }
 
         private void mtbNascimento_KeyPress(object sender, KeyPressEventArgs e)
