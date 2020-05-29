@@ -6,7 +6,7 @@ using static EM.Domain.Utils;
 
 namespace EM.Domain.Testes
 {
-    public class Testes
+    public class AlunoTestes
     {
         private Aluno aluno = new Aluno();
 
@@ -35,7 +35,7 @@ namespace EM.Domain.Testes
         [Fact(DisplayName = "Teste Set Nome maior que 100")]
         public void SetNome_NomeMaiorQue100_RetornaValidationException()
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder(); // TIP: new String('0', 101);
             for (int i = 0;i <= 10;i++)
                 stringBuilder.Append("char++++++");
             var exception = Assert.Throws<ValidationException>(() => aluno.Nome = stringBuilder.ToString());
@@ -59,7 +59,7 @@ namespace EM.Domain.Testes
 
         [Fact(DisplayName = "Teste Set Nascimento")]
         public void SetNascimento_NaoEhDataValida_RetornaValidationException()
-        {
+        { // TIP: Testar data mínima, data + 1 dia do DateTime.Now
             var exception = Assert.Throws<ValidationException>(() => aluno.Nascimento = new DateTime(2021, 07, 05));
             Assert.Equal("Data deve ser anterior ao dia de hoje!", exception.Message);
         }

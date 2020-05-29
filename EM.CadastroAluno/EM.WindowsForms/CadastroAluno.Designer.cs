@@ -138,6 +138,7 @@ namespace EM.WindowsForms
             this.cboSexo.Name = "cboSexo";
             this.cboSexo.Size = new System.Drawing.Size(100, 23);
             this.cboSexo.TabIndex = 3;
+            this.cboSexo.KeyDown += new KeyEventHandler(this.txtCadastro_KeyDown);
             // 
             // txtCPF
             // 
@@ -145,6 +146,7 @@ namespace EM.WindowsForms
             this.txtCPF.Name = "txtCPF";
             this.txtCPF.Size = new System.Drawing.Size(117, 23);
             this.txtCPF.TabIndex = 5;
+            this.txtCPF.KeyDown += new KeyEventHandler(this.txtCadastro_KeyDown);
             // 
             // lblNascimento
             // 
@@ -165,6 +167,7 @@ namespace EM.WindowsForms
             this.mtbNascimento.MaskInputRejected += new System.Windows.Forms.MaskInputRejectedEventHandler(this.mtbNascimento_MaskInputRejected);
             this.mtbNascimento.Click += new System.EventHandler(this.mtbNascimento_Click);
             this.mtbNascimento.TextChanged += new System.EventHandler(this.mtbNascimento_TextChanged);
+            this.mtbNascimento.KeyDown += new KeyEventHandler(this.txtCadastro_KeyDown);
             // 
             // lblNome
             // 
@@ -182,6 +185,7 @@ namespace EM.WindowsForms
             this.txtNome.Name = "txtNome";
             this.txtNome.Size = new System.Drawing.Size(361, 23);
             this.txtNome.TabIndex = 2;
+            this.txtNome.KeyDown += new KeyEventHandler(this.txtCadastro_KeyDown);
             // 
             // txtMatricula
             // 
@@ -192,6 +196,7 @@ namespace EM.WindowsForms
             this.txtMatricula.TabIndex = 1;
             this.txtMatricula.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtMatricula.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtMatricula_KeyPress);
+            this.txtMatricula.KeyDown += new KeyEventHandler(this.txtCadastro_KeyDown);
             // 
             // lblMatricula
             // 
@@ -240,6 +245,7 @@ namespace EM.WindowsForms
             this.txtPesquisa.Name = "txtPesquisa";
             this.txtPesquisa.Size = new System.Drawing.Size(408, 23);
             this.txtPesquisa.TabIndex = 2;
+            this.txtPesquisa.KeyDown += new KeyEventHandler(this.txtPesquisar_KeyDown);
             // 
             // btnExcluir
             // 

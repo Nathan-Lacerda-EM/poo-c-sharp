@@ -98,6 +98,7 @@ namespace EM.WindowsForms
 
                     MessageBox.Show("Aluno adicionado com sucesso!", "Cadastro de aluno",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    txtMatricula.Focus();
                 }
 
                 /*
@@ -130,6 +131,7 @@ namespace EM.WindowsForms
 
                     MessageBox.Show("Aluno modificado com sucesso!", "Modificação de aluno",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    txtPesquisa.Focus();
                 }
             }
             else
@@ -145,9 +147,10 @@ namespace EM.WindowsForms
             {
                 MessageBox.Show("Nenhum aluno foi selecionado.", "Edição de aluno",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtPesquisa.Focus();
                 return;
             }
-            
+
             string matricula = Convert.ToString(dgvAlunos.CurrentRow.Cells["Matrícula"].Value);
             string nome = (string)dgvAlunos.CurrentRow.Cells["Nome"].Value;
             string cpf = (string)dgvAlunos.CurrentRow.Cells["CPF"].Value;
@@ -156,6 +159,7 @@ namespace EM.WindowsForms
 
             SetarCampos(matricula, nome, cpf, sexo, nascimento);
             AlterarEstadoControlesEmEdicao(true);
+            txtPesquisa.Focus();
         }
 
         private void btnLimpaCancela_Click(object sender, EventArgs e)
@@ -175,12 +179,55 @@ namespace EM.WindowsForms
         {
             if (txtPesquisa.TextLength > 0)
             {
-                bs.Filter = "Nome LIKE '%" + txtPesquisa.Text + "%'";
+                var apenasNumero = int.TryParse(txtPesquisa.Text, out int inteiro);
+
+                
+                if (apenasNumero)
+                    bs.Filter = string.Format("convert(Matrícula, 'System.String') LIKE '%"
+                            + inteiro.ToString() + "%'");
+                else
+                    bs.Filter = "Nome LIKE '%" + txtPesquisa.Text + "%' OR CPF LIKE '%" + txtPesquisa.Text + "%'";
+
+                /*
+                var source = bs.DataSource;
+                //source = ((BindingSource)source).DataSource;
+                var table = (DataTable)source;
+
+                for (int i = 0; i < table.Rows.Count; i++)
+                {
+                    table.Rows[i]["CPF"] = LimparCPF((string)table.Rows[i]["CPF"]);
+
+                    var asas = table.Rows[i]["CPF"];
+                }
+
+                bs.DataSource = table;
+
+                if (apenasNumero)
+                    bs.Filter = string.Format("convert(Matrícula, 'System.String') LIKE '%"
+                            + inteiro.ToString() + "%' OR CPF LIKE '%" + inteiro.ToString() + "%'");
+                else
+                    bs.Filter = "Nome LIKE '%" + txtPesquisa.Text + "%' OR CPF LIKE '%" + LimparCPF(txtPesquisa.Text) + "%'";
+                
+                for (int i = 0; i < table.Rows.Count; i++)
+                    table.Rows[i]["CPF"] = FormatarCPF((string)table.Rows[i]["CPF"]);
+
+                bs.DataSource = table;*/
+
             }
             else
-            {
                 bs.RemoveFilter();
-            }
+        }
+
+        private void txtPesquisar_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                btnPesquisar_Click(this, new EventArgs());
+        }
+
+        private void txtCadastro_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                BtnAddModificar_Click(this, new EventArgs());
         }
 
         private void btnExcluir_Click(object sender, EventArgs e)
@@ -206,6 +253,7 @@ namespace EM.WindowsForms
 
                 MessageBox.Show("Aluno excluído!", "Exclusão de aluno",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
+                txtPesquisa.Focus();
             }
         }
 
@@ -320,7 +368,8 @@ namespace EM.WindowsForms
                 btnExcluir.Enabled = false;
                 btnEditar.Enabled = false;
                 btnPesquisa.Enabled = false;
-            } else
+            }
+            else
             {
                 estadoCadastro.Text = "Novo aluno";
                 btnLimpaCancela.Text = "Limpar";

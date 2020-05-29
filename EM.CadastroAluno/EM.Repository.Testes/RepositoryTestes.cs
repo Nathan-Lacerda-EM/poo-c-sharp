@@ -6,7 +6,7 @@ using Xunit;
 namespace EM.Repository.Testes
 {
     [Collection("Database collection")]
-    public class Testes
+    public class RepositoryTestes
     {
         /*
          * TESTE ADIÇÃO
