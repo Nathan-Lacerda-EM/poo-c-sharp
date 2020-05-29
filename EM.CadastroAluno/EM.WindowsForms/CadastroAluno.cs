@@ -428,7 +428,7 @@ namespace EM.WindowsForms
             else if (mtbNascimento.Text.Replace(" ", "").Length != 10)
             {
                 mtbNascimento.Focus();
-                return "Digite a data de nascimento completa!";
+                return "Digite a data de nascimento completa e corretamente!";
             }
             else
                 return null;
