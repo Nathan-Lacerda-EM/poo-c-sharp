@@ -318,9 +318,7 @@ namespace EM.WindowsForms
             catch (Exception e)
             {
                 if (e.Message.Equals("Não existe nenhum aluno no repositório!"))
-                {
                     bs.DataSource = null;
-                }
                 else
                 {
                     var result = MessageBox.Show("Ver erro completo?", "Erro desconhecido",
@@ -331,9 +329,7 @@ namespace EM.WindowsForms
                      * a ser enviado a equipe de desenvolvimento.
                      */
                     if (result == DialogResult.Yes)
-                    {
                         new TelaErro(e);
-                    }
                 }
             }
         }
