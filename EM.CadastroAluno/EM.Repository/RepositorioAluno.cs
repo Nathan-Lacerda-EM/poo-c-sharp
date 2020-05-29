@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Jil;
+using System.IO;
 
 namespace EM.Repository
 {
@@ -13,7 +15,7 @@ namespace EM.Repository
 
         public RepositorioAluno()
         {
-            repositorioAlunos = new List<Aluno>();
+            repositorioAlunos = CarregarRepositorio() ?? new List<Aluno>();
         }
 
         public override void Add(Aluno aluno)
@@ -28,6 +30,7 @@ namespace EM.Repository
                 throw new Exception("Aluno ou CPF já registrado!");
 
             repositorioAlunos.Add(aluno);
+            SalvarRepositorio();
         }
 
         public override void Remove(Aluno aluno)
@@ -41,6 +44,7 @@ namespace EM.Repository
                 throw new Exception("Aluno não encontrado!");
 
             repositorioAlunos.Remove(alunos.Single());
+            SalvarRepositorio();
         }
 
         public override void Update(Aluno aluno)
@@ -63,6 +67,7 @@ namespace EM.Repository
 
             repositorioAlunos.Remove(alunos.First());
             repositorioAlunos.Add(aluno);
+            SalvarRepositorio();
         }
 
         public override IEnumerable<Aluno> GetAll()
@@ -116,6 +121,31 @@ namespace EM.Repository
                 return alunos;
             else
                 throw new Exception("Não existe nenhum aluno com esse nome!");
+        }
+
+        public void SalvarRepositorio()
+        {
+            var arquivoRepositorio = Path.GetTempPath() + "RepositorioAlunos.txt";
+            var listaSerializada = new StringWriter();
+
+            JSON.Serialize(repositorioAlunos, listaSerializada);
+
+            if(File.Exists(arquivoRepositorio))
+                File.WriteAllText(arquivoRepositorio, listaSerializada.ToString());
+            else
+            {
+                File.CreateText(arquivoRepositorio);
+                File.WriteAllText(arquivoRepositorio, listaSerializada.ToString());
+            }
+        }
+
+        public List<Aluno> CarregarRepositorio()
+        {
+            var arquivoRepositorio = Path.GetTempPath() + "RepositorioAlunos.txt";
+            if (File.Exists(arquivoRepositorio))
+                return JSON.Deserialize<List<Aluno>>(new StringReader(File.ReadAllText(arquivoRepositorio)));
+            else
+                return null;
         }
     }
 }
