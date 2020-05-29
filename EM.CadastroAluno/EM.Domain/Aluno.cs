@@ -58,9 +58,10 @@ namespace EM.Domain
             get => _nascimento;
             set
             {
-                if (value.CompareTo(DateTime.Today) <= 0 && value.Year >= 1900)
+                const int anoMinimo = 1900;
+                if (value.CompareTo(DateTime.Today) <= 0 && value.Year >= anoMinimo)
                     _nascimento = value;
-                else if(value.Year < 1900)
+                else if(value.Year < anoMinimo)
                     throw new ValidationException("Ano deve ser maior que 1900!");
                 else
                     throw new ValidationException("Data deve ser igual ou anterior ao dia de hoje!");
