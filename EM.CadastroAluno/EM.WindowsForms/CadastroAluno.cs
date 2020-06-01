@@ -29,8 +29,7 @@ namespace EM.WindowsForms
 
         private void btnAddModificar_Click(object sender, EventArgs e)
         {
-            bool erroCampos = EstaCorretoPreenchimentoFormulario();
-            if (!erroCampos)
+            if (!EstaCorretoPreenchimentoFormulario())
             {
                 return;
             }
@@ -71,63 +70,6 @@ namespace EM.WindowsForms
 
             MostreInformacaoNaTelaDoUsuario("Aluno modificado com sucesso!", "Modificação de aluno");
             txtPesquisa.Focus();
-        }
-
-        private bool ValideCPF(string CPF)
-        {
-            if (EhCPFValido(txtCPF.Text) && txtCPF.TextLength > 0)
-            {
-                return true;
-            }
-            else if (txtCPF.TextLength == 0)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private Aluno CrieObjetoAluno(string matricula, string nome, string dataDeNascimento, object sexo, string cpf)
-        {
-            return new Aluno
-            {
-                Matricula = Convert.ToInt32(matricula),
-                Nome = nome,
-                Nascimento = Convert.ToDateTime(dataDeNascimento),
-                Sexo = (EnumeradorDeSexo)sexo,
-                CPF = cpf
-            };
-        }
-
-        private void AdicioneAluno()
-        {
-            string cpf = txtCPF.Text;
-            if (!ValideCPF(cpf))
-            {
-                MostreErroNaTelaDoUsuario("CPF Inválido!", "Cadastro de aluno");
-                return;
-            }
-
-            Aluno aluno = CrieObjetoAluno(txtMatricula.Text, txtNome.Text, mtbNascimento.Text, cboSexo.SelectedItem, cpf);
-
-            try
-            {
-                _repoAluno.Add(aluno);
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message == "Aluno ou CPF já registrado!")
-                {
-                    MostreErroNaTelaDoUsuario("Aluno ou CPF já registrado!", "Cadastro de aluno");
-                    return;
-                }
-            }
-
-            AtualizeDataGridView();
-            LimpeFormulario();
-
-            MostreInformacaoNaTelaDoUsuario("Aluno adicionado com sucesso!", "Cadastro de aluno");
-            txtMatricula.Focus();
         }
 
         private void btnEditar_Click(object sender, EventArgs e)
@@ -232,7 +174,7 @@ namespace EM.WindowsForms
         {
             if (mtbNascimento.Text.Replace(" ", "").Length == 10)
             {
-                var data = DateTime.TryParse(mtbNascimento.Text, out DateTime dataDeNascimento);
+                bool data = DateTime.TryParse(mtbNascimento.Text, out DateTime dataDeNascimento);
 
                 if (!data)
                 {
@@ -456,6 +398,63 @@ namespace EM.WindowsForms
             }
 
             return true;
+        }
+
+        private bool ValideCPF(string CPF)
+        {
+            if (EhCPFValido(txtCPF.Text) && txtCPF.TextLength > 0)
+            {
+                return true;
+            }
+            else if (txtCPF.TextLength == 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private Aluno CrieObjetoAluno(string matricula, string nome, string dataDeNascimento, object sexo, string cpf)
+        {
+            return new Aluno
+            {
+                Matricula = Convert.ToInt32(matricula),
+                Nome = nome,
+                Nascimento = Convert.ToDateTime(dataDeNascimento),
+                Sexo = (EnumeradorDeSexo)sexo,
+                CPF = cpf
+            };
+        }
+
+        private void AdicioneAluno()
+        {
+            string cpf = txtCPF.Text;
+            if (!ValideCPF(cpf))
+            {
+                MostreErroNaTelaDoUsuario("CPF Inválido!", "Cadastro de aluno");
+                return;
+            }
+
+            Aluno aluno = CrieObjetoAluno(txtMatricula.Text, txtNome.Text, mtbNascimento.Text, cboSexo.SelectedItem, cpf);
+
+            try
+            {
+                _repoAluno.Add(aluno);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message == "Aluno ou CPF já registrado!")
+                {
+                    MostreErroNaTelaDoUsuario("Aluno ou CPF já registrado!", "Cadastro de aluno");
+                    return;
+                }
+            }
+
+            AtualizeDataGridView();
+            LimpeFormulario();
+
+            MostreInformacaoNaTelaDoUsuario("Aluno adicionado com sucesso!", "Cadastro de aluno");
+            txtMatricula.Focus();
         }
 
         private void MostreErroNaTelaDoUsuario(string erro, string tituloBox)

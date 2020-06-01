@@ -82,16 +82,20 @@ namespace EM.Repository.Testes
                 new DateTime(1999, 7, 5), EnumeradorDeSexo.Masculino);
 
             Aluno alunoAux = new Aluno(201800774, "Raimunda Maria", "640.102.150-03",
-                new DateTime(1938, 7, 5), EnumeradorDeSexo.Masculino);
+                new DateTime(1938, 7, 5), EnumeradorDeSexo.Feminino);
 
             RepositorioAluno repositorioAluno = new RepositorioAluno();
             repositorioAluno.Add(aluno);
 
             repositorioAluno.Update(alunoAux);
 
-            //TODO: COMPARAR O QUE FOI MUDADO E O EQUALS SÓ COMPARA A MATRÍCULA NESTE OBJETO
-            Assert.True(aluno.Equals(alunoAux) &&
-                repositorioAluno.GetByContendoNoNome("Raimunda").First().Equals(alunoAux));
+            var alunoAtualizado = repositorioAluno.GetByContendoNoNome("Raimunda").First();
+
+            Assert.True(alunoAtualizado.Equals(alunoAux) &&
+                alunoAtualizado.Nome == alunoAux.Nome &&
+                alunoAtualizado.CPF == alunoAux.CPF &&
+                alunoAtualizado.Sexo == alunoAux.Sexo &&
+                alunoAtualizado.Nascimento == alunoAux.Nascimento);
         }
 
         [Fact(DisplayName = "Atualizar aluno inexistente do repositório")]
