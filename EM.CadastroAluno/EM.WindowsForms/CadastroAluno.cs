@@ -1,203 +1,191 @@
 ﻿using EM.Domain;
-using static EM.Domain.Utils;
 using EM.Repository;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Drawing;
+using static EM.Domain.Utils;
 
 namespace EM.WindowsForms
 {
     public partial class CadastroAluno : Form
     {
-        RepositorioAluno repoAluno;
-        BindingSource bs;
+        private readonly RepositorioAluno _repoAluno = new RepositorioAluno();
+        private readonly BindingSource _bs = new BindingSource();
 
         public CadastroAluno()
         {
             InitializeComponent();
-
             IniciarControles();
         }
 
         private void IniciarControles()
         {
-            repoAluno = new RepositorioAluno();
-            bs = new BindingSource();
-
             cboSexo.Items.Add(EnumeradorDeSexo.Masculino);
             cboSexo.Items.Add(EnumeradorDeSexo.Feminino);
+            // Can be used too: cboSexo.Items.AddRange(Enum.GetValues(typeof(EnumeradorDeSexo)));
 
             SetupDGVAlunos();
-            AtualizarDataGridView();
+            AtualizeDataGridView();
         }
 
         private void btnAddModificar_Click(object sender, EventArgs e)
         {
-            /*
-             * Verificar se todos os campos respeitam os requisitos mínimos.
-             */
-            var strErroCampos = VerificarPreenchimentoCampos();
-            if (strErroCampos == null)
+            var erroCampos = EstaCorretoPreenchimentoFormulario();
+            if (!erroCampos)
             {
-                /*
-                 * Como estou utilizando o mesmo botão para adicionar e modificar os dados,
-                 * faço a verificação do nome do botão por if mesmo.
-                 */
-                if (btnAddModificar.Text.Equals("Adicionar"))
-                {
-                    Aluno aluno = new Aluno();
-                    aluno.Matricula = int.Parse(txtMatricula.Text);
-                    aluno.Nome = txtNome.Text;
-                    if (ValidaCpf(txtCPF.Text) && txtCPF.TextLength > 0)
-                        aluno.CPF = txtCPF.Text;
-                    else if (txtCPF.TextLength == 0)
-                        aluno.CPF = "";
-                    else
-                    {
-                        MessageBox.Show("CPF Inválido!", "Cadastro de aluno",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
+                return;
+            }
 
-                    aluno.Nascimento = DateTime.Parse(mtbNascimento.Text);
-                    aluno.Sexo = (EnumeradorDeSexo)cboSexo.SelectedItem;
+            if (btnAddModificar.Text != "Adicionar")
+            {
+                ModifiqueAluno();
+                return;
+            }
 
-                    try
-                    {
-                        repoAluno.Add(aluno);
-                    }
-                    catch (Exception ex)
-                    {
-                        if (ex.Message.Equals("Aluno ou CPF já registrado!"))
-                        {
-                            MessageBox.Show("Aluno ou CPF já registrado!", "Cadastro de aluno",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
-                    }
+            AdicioneAluno();
+        }
 
-                    AtualizarDataGridView();
-                    LimparFormulario();
+        private void ModifiqueAluno()
+        {
+            Aluno aluno = new Aluno
+            {
+                Matricula = int.Parse(txtMatricula.Text),
+                Nome = txtNome.Text,
+                Nascimento = DateTime.Parse(mtbNascimento.Text),
+                Sexo = (EnumeradorDeSexo)cboSexo.SelectedItem
+            };
 
-                    MessageBox.Show("Aluno adicionado com sucesso!", "Cadastro de aluno",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    txtMatricula.Focus();
-                }
+            if (!ValideCpf(txtCPF.Text) && txtCPF.TextLength > 0)
+            {
+                MostreErroNaTelaDoUsuario("CPF Inválido!", "Modificação de aluno");
+                return;
+            }
+            else if (txtCPF.TextLength == 0)
+            {
+                aluno.CPF = txtCPF.Text;
+            }
 
-                /*
-                 * Botão de modificar, deixei else já que não é possível ser outro além de
-                 * adicionar ou modificar, o código faz apenas essas duas alterações.
-                 */
-                else
-                {
-                    Aluno aluno = new Aluno();
-                    aluno.Matricula = int.Parse(txtMatricula.Text);
-                    aluno.Nome = txtNome.Text;
-                    if (ValidaCpf(txtCPF.Text) && txtCPF.TextLength > 0)
-                        aluno.CPF = txtCPF.Text;
-                    else if (txtCPF.TextLength == 0)
-                        aluno.CPF = "";
-                    else
-                    {
-                        MessageBox.Show("CPF Inválido!", "Modificação de aluno",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
+            _repoAluno.Update(aluno);
 
-                    aluno.Nascimento = DateTime.Parse(mtbNascimento.Text);
-                    aluno.Sexo = (EnumeradorDeSexo)cboSexo.SelectedItem;
+            AtualizeDataGridView();
+            AjusteEstadoControlesEmEdicao(false);
 
-                    repoAluno.Update(aluno);
+            MostreInformacaoNaTelaDoUsuario("Aluno modificado com sucesso!", "Modificação de aluno");
+            txtPesquisa.Focus();
+        }
 
-                    AtualizarDataGridView();
-                    AlterarEstadoControlesEmEdicao(false);
+        private void GetCPF(string CPF)
+        {
 
-                    MessageBox.Show("Aluno modificado com sucesso!", "Modificação de aluno",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    txtPesquisa.Focus();
-                }
+        }
+
+        private void MostreInformacaoNaTelaDoUsuario(string informacao, string tituloBox)
+        {
+            MessageBox.Show(informacao, tituloBox,
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void AdicioneAluno()
+        {
+            Aluno aluno = new Aluno
+            {
+                Matricula = int.Parse(txtMatricula.Text),
+                Nome = txtNome.Text,
+                Nascimento = DateTime.Parse(mtbNascimento.Text),
+                Sexo = (EnumeradorDeSexo)cboSexo.SelectedItem
+            };
+
+            if (ValideCpf(txtCPF.Text) && txtCPF.TextLength > 0)
+            {
+                aluno.CPF = txtCPF.Text;
+            }
+            else if (txtCPF.TextLength == 0)
+            {
+                aluno.CPF = "";
             }
             else
             {
-                MessageBox.Show(strErroCampos, "Validação do cadastro",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MostreErroNaTelaDoUsuario("CPF Inválido!", "Cadastro de aluno");
+                return;
             }
+
+            try
+            {
+                _repoAluno.Add(aluno);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message == "Aluno ou CPF já registrado!")
+                {
+                    MostreErroNaTelaDoUsuario("Aluno ou CPF já registrado!", "Cadastro de aluno");
+                    return;
+                }
+            }
+
+            AtualizeDataGridView();
+            LimpeFormulario();
+
+            MessageBox.Show("Aluno adicionado com sucesso!", "Cadastro de aluno",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            txtMatricula.Focus();
         }
 
         private void btnEditar_Click(object sender, EventArgs e)
         {
             if (dgvAlunos.CurrentRow == null)
             {
-                MessageBox.Show("Nenhum aluno foi selecionado.", "Edição de aluno",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MostreErroNaTelaDoUsuario("Nenhum aluno foi selecionado.", "Edição de aluno");
                 txtPesquisa.Focus();
                 return;
             }
 
-            string matricula = Convert.ToString(dgvAlunos.CurrentRow.Cells["Matrícula"].Value);
-            string nome = (string)dgvAlunos.CurrentRow.Cells["Nome"].Value;
-            string cpf = (string)dgvAlunos.CurrentRow.Cells["CPF"].Value;
-            int sexo = Convert.ToInt32(dgvAlunos.CurrentRow.Cells["Sexo"].Value);
-            string nascimento = ((DateTime)dgvAlunos.CurrentRow.Cells["Nascimento"].Value).ToShortDateString();
-
-            SetarCampos(matricula, nome, cpf, sexo, nascimento);
-            AlterarEstadoControlesEmEdicao(true);
-            txtPesquisa.Focus();
+            AjusteCampos(
+                Convert.ToString(dgvAlunos.CurrentRow.Cells["Matrícula"].Value),
+                (string)dgvAlunos.CurrentRow.Cells["Nome"].Value,
+                (string)dgvAlunos.CurrentRow.Cells["CPF"].Value,
+                Convert.ToInt32(dgvAlunos.CurrentRow.Cells["Sexo"].Value),
+                ((DateTime)dgvAlunos.CurrentRow.Cells["Nascimento"].Value).ToShortDateString()
+            );
+            AjusteEstadoControlesEmEdicao(true);
         }
 
         private void btnLimpaCancela_Click(object sender, EventArgs e)
         {
-            if (btnLimpaCancela.Text.Equals("Limpar"))
-                LimparFormulario();
-            else
-                AlterarEstadoControlesEmEdicao(false);
+            if (btnLimpaCancela.Text != "Limpar")
+            {
+                AjusteEstadoControlesEmEdicao(false);
+                return;
+            }
+
+            LimpeFormulario();
         }
 
-        /* 
-         * Fiz seguindo o protótipo, porém acredito que utilizando o TextChanged
-         * ficaria melhor e mais confortável, já que não teria que clicar toda vez
-         * no botão Pesquisar para atualizar a Grid.
-         */
         private void btnPesquisar_Click(object sender, EventArgs e)
         {
-            if (txtPesquisa.TextLength > 0)
+            if (txtPesquisa.TextLength == 0)
             {
-                try
-                {
-                    if (int.TryParse(txtPesquisa.Text, out int inteiro))
-                        bs.DataSource = repoAluno.GetByMatricula(inteiro);
-                    else
-                        bs.DataSource = repoAluno.GetByContendoNoNome(txtPesquisa.Text);
+                AtualizeDataGridView();
+                return;
+            }
 
+            try
+            {
+                if (int.TryParse(txtPesquisa.Text, out int inteiro))
+                {
+                    _bs.DataSource = _repoAluno.GetByMatricula(inteiro);
+                    return;
                 }
-                catch (Exception exc)
+                _bs.DataSource = _repoAluno.GetByContendoNoNome(txtPesquisa.Text);
+            }
+            catch (Exception exc)
+            {
+                if (exc.Message == "Não existe nenhum aluno com esse nome!" ||
+                    exc.Message == "Não existe nenhum aluno com essa matrícula!" ||
+                    exc.Message == "Não existe nenhum aluno no repositório!")
                 {
-                    if (exc.Message.Equals("Não existe nenhum aluno com esse nome!") ||
-                        exc.Message.Equals("Não existe nenhum aluno com essa matrícula!"))
-                        bs.DataSource = null;
-                    else
-                    {
-                        var result = MessageBox.Show("Ver erro completo?", "Erro desconhecido",
-                            MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-
-                        /* 
-                         * Aqui pode ser implementado um relatório de erro
-                         * a ser enviado a equipe de desenvolvimento.
-                         */
-                        if (result == DialogResult.Yes)
-                        {
-                            new TelaErro(exc);
-                        }
-                    }
+                    _bs.DataSource = null;
+                    return;
                 }
             }
-            else
-                bs.DataSource = repoAluno.GetAll();
         }
 
         private void btnExcluir_Click(object sender, EventArgs e)
@@ -209,7 +197,7 @@ namespace EM.WindowsForms
                 return;
             }
 
-            var result = MessageBox.Show("Tem certeza que quer excluir este aluno?", "Exclusão de Aluno",
+            DialogResult result = MessageBox.Show("Tem certeza que quer excluir este aluno?", "Exclusão de Aluno",
                                          MessageBoxButtons.YesNo,
                                          MessageBoxIcon.Question);
 
@@ -217,9 +205,9 @@ namespace EM.WindowsForms
             {
                 int matricula = Convert.ToInt32(dgvAlunos.CurrentRow.Cells["Matrícula"].Value);
 
-                repoAluno.Remove(repoAluno.GetByMatricula(matricula));
+                _repoAluno.Remove(_repoAluno.GetByMatricula(matricula));
 
-                AtualizarDataGridView();
+                AtualizeDataGridView();
 
                 MessageBox.Show("Aluno excluído!", "Exclusão de aluno",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -227,70 +215,86 @@ namespace EM.WindowsForms
             }
         }
 
-        private void dgvAluno_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void dgvAlunos_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             btnEditar_Click(sender, e);
         }
 
         private void mtbNascimento_Click(object sender, EventArgs e)
         {
-            if (mtbNascimento.Text.Equals("  /  /"))
+            if (mtbNascimento.Text == "  /  /")
+            {
                 mtbNascimento.Select(0, 0);
+            }
         }
 
         private void mtbNascimento_TextChanged(object sender, EventArgs e)
         {
-            Regex regex = new Regex(@"((0[1-9]|1[0-9]|2[0-9]|3[0-1])\/(0[1-9]|1[0-2])\/((19|20)\d\d))$");
-            if (mtbNascimento.Text.Length == 10)
+            if (DateTime.TryParse(mtbNascimento.Text, out DateTime dataDeNascimento) && mtbNascimento.TextLength == 10)
             {
-                if (!regex.IsMatch(mtbNascimento.Text))
+                if (dataDeNascimento.CompareTo(DateTime.Now) > 0)
                 {
-                    MessageBox.Show("Data de nascimento não é válida!", "Validação de data de nascimento",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MostreErroNaTelaDoUsuario("Data de nascimento não pode ser uma data futura!",
+                        "Validação de data de nascimento");
                     mtbNascimento.ResetText();
                     mtbNascimento.Focus();
-                    mtbNascimento_Click(sender, e);
-                    return;
                 }
-
-                if (DateTime.Parse(mtbNascimento.Text).CompareTo(DateTime.Now) > 0)
-                {
-                    MessageBox.Show("Data de nascimento não pode ser uma data futura!", "Validação de data de nascimento",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    mtbNascimento.ResetText();
-                    mtbNascimento.Focus();
-                    mtbNascimento_Click(sender, e);
-                }
+                return;
             }
+            MostreErroNaTelaDoUsuario("Data de nascimento inválida!", "Validação de data de nascimento");
+            mtbNascimento.ResetText();
+            mtbNascimento.Focus();
         }
 
         private void txtPesquisar_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
                 btnPesquisar_Click(this, new EventArgs());
+            }
         }
 
         private void txtCadastro_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
                 btnAddModificar_Click(this, new EventArgs());
+            }
+        }
+
+        private void dgvAlunos_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                btnExcluir_Click(this, new EventArgs());
+            }
+            else if (e.KeyCode == Keys.Enter)
+            {
+                btnEditar_Click(this, new EventArgs());
+            }
         }
 
         private void mtbNascimento_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (mtbNascimento.Text.Equals("  /  /"))
+            if (mtbNascimento.Text == "  /  /")
+            {
                 mtbNascimento.Select(0, 0);
+            }
 
             if (char.IsControl(e.KeyChar) || (e.KeyChar >= 48 && e.KeyChar <= 57))
+            {
                 return;
-
+            }
             e.Handled = true;
         }
 
         private void txtMatricula_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (char.IsControl(e.KeyChar) || (e.KeyChar >= 48 && e.KeyChar <= 57))
+            {
                 return;
+            }
+
             e.Handled = true;
         }
 
@@ -298,76 +302,82 @@ namespace EM.WindowsForms
         {
             if (char.IsControl(e.KeyChar) || (e.KeyChar >= 48 && e.KeyChar <= 57) ||
                 e.KeyChar == '.' || e.KeyChar == '-')
+            {
                 return;
+            }
+
             e.Handled = true;
         }
 
-        /*                                   MÉTODOS ÚTEIS
-         * Os métodos abaixo são para melhorar a legibilidade e diminuir o tamanho do código.
-         * São métodos utilizados em vários locais e separados melhoram a legibilidade,
-         * facilitam em mudanças e deixa o código mais organizado.
-         */
-
-        public void AtualizarDataGridView()
+        private void AtualizeDataGridView()
         {
             try
             {
-                bs.DataSource = repoAluno.GetAll();
+                _bs.DataSource = _repoAluno.GetAll();
             }
-            catch (Exception e)
+            catch (Exception exc)
             {
-                if (e.Message.Equals("Não existe nenhum aluno no repositório!"))
-                    bs.DataSource = null;
-                else
+                if (exc.Message == "Não existe nenhum aluno no repositório!")
                 {
-                    var result = MessageBox.Show("Ver erro completo?", "Erro desconhecido",
-                            MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                    _bs.DataSource = null;
+                    return;
+                }
 
-                    /* 
-                     * Aqui pode ser implementado um relatório de erro
-                     * a ser enviado a equipe de desenvolvimento.
-                     */
-                    if (result == DialogResult.Yes)
-                        new TelaErro(e);
+                DialogResult result = MessageBox.Show(exc.Message + "\n\nVer erro completo?", "Erro desconhecido",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+
+                if (result == DialogResult.Yes)
+                {
+                    new TelaErro(exc);
                 }
             }
         }
 
-        public void SetupDGVAlunos()
+        private void SetupDGVAlunos()
         {
             dgvAlunos.AutoGenerateColumns = false;
-            dgvAlunos.DataSource = bs;
+            dgvAlunos.DataSource = _bs;
 
-            DataGridViewColumn clmMatricula = new DataGridViewTextBoxColumn();
-            clmMatricula.DataPropertyName = "Matricula";
-            clmMatricula.Name = "Matrícula";
+            DataGridViewColumn clmMatricula = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Matricula",
+                Name = "Matrícula"
+            };
             dgvAlunos.Columns.Add(clmMatricula);
 
-            DataGridViewColumn clmNome = new DataGridViewTextBoxColumn();
-            clmNome.DataPropertyName = "Nome";
-            clmNome.Name = "Nome";
+            DataGridViewColumn clmNome = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Nome",
+                Name = "Nome"
+            };
             dgvAlunos.Columns.Add(clmNome);
 
-            DataGridViewColumn clmSexo = new DataGridViewTextBoxColumn();
-            clmSexo.DataPropertyName = "Sexo";
-            clmSexo.Name = "Sexo";
+            DataGridViewColumn clmSexo = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Sexo",
+                Name = "Sexo"
+            };
             dgvAlunos.Columns.Add(clmSexo);
 
-            DataGridViewColumn clmNascimento = new DataGridViewTextBoxColumn();
-            clmNascimento.DataPropertyName = "Nascimento";
-            clmNascimento.Name = "Nascimento";
+            DataGridViewColumn clmNascimento = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Nascimento",
+                Name = "Nascimento"
+            };
             dgvAlunos.Columns.Add(clmNascimento);
 
-            DataGridViewColumn clmCPF = new DataGridViewTextBoxColumn();
-            clmCPF.DataPropertyName = "CPF";
-            clmCPF.Name = "CPF";
+            DataGridViewColumn clmCPF = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "CPF",
+                Name = "CPF"
+            };
             dgvAlunos.Columns.Add(clmCPF);
 
             dgvAlunos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dgvAlunos.Columns["Nome"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         }
 
-        private void SetarCampos(string matricula, string nome, string cpf, int sexo, string nascimento)
+        private void AjusteCampos(string matricula, string nome, string cpf, int sexo, string nascimento)
         {
             txtMatricula.Text = matricula;
             txtNome.Text = nome;
@@ -376,7 +386,7 @@ namespace EM.WindowsForms
             mtbNascimento.Text = nascimento;
         }
 
-        private void AlterarEstadoControlesEmEdicao(bool estado)
+        private void AjusteEstadoControlesEmEdicao(bool estado)
         {
             if (estado)
             {
@@ -399,11 +409,11 @@ namespace EM.WindowsForms
                 btnExcluir.Enabled = true;
                 btnEditar.Enabled = true;
                 btnPesquisa.Enabled = true;
-                LimparFormulario();
+                LimpeFormulario();
             }
         }
 
-        private void LimparFormulario()
+        private void LimpeFormulario()
         {
             txtMatricula.ResetText();
             txtNome.ResetText();
@@ -412,30 +422,37 @@ namespace EM.WindowsForms
             mtbNascimento.ResetText();
         }
 
-        public string VerificarPreenchimentoCampos()
+        public bool EstaCorretoPreenchimentoFormulario()
         {
             if (!(txtMatricula.TextLength > 0))
             {
+                MostreErroNaTelaDoUsuario("Preencha o campo matrícula!", "Validação do cadastro");
                 txtMatricula.Focus();
-                return "Matrícula deve ser maior que 0!";
+                return false;
             }
             else if (!(txtNome.TextLength > 0))
             {
+                MostreErroNaTelaDoUsuario("Preencha o campo nome!", "Validação do cadastro");
                 txtNome.Focus();
-                return "Nome não pode estar vazio!";
+                return false;
             }
             else if (cboSexo.SelectedIndex == -1)
             {
+                MostreErroNaTelaDoUsuario("Selecione um sexo!", "Validação do cadastro");
                 cboSexo.Focus();
-                return "Selecione um sexo!";
+                return false;
             }
             else if (mtbNascimento.Text.Replace(" ", "").Length != 10)
             {
+                MostreErroNaTelaDoUsuario("Digite uma data de nascimento completa!", "Validação do cadastro");
                 mtbNascimento.Focus();
-                return "Digite a data de nascimento completa e corretamente!";
+                return false;
             }
-            else
-                return null;
+
+            return true;
         }
+
+        private void MostreErroNaTelaDoUsuario(string erro, string tituloBox) => MessageBox.Show(erro, tituloBox,
+            MessageBoxButtons.OK, MessageBoxIcon.Error);
     }
 }

@@ -8,7 +8,7 @@ namespace EM.Domain
     public class Utils
     {
         //Source: https://gabrielrb.net/2011/10/11/validar-cpf-em-csharp/
-        public static bool ValidaCpf(string cpf)
+        public static bool ValideCpf(string cpf)
         {
 
             int[] multiplicador1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };

@@ -78,7 +78,7 @@ namespace EM.Domain
             get => FormatarCPF(_cpf);
             set
             {
-                if (ValidaCpf(value))
+                if (ValideCpf(value))
                     _cpf = LimparCPF(value);
                 else if (value.Length > 0)
                     throw new ValidationException("CPF inválido!");

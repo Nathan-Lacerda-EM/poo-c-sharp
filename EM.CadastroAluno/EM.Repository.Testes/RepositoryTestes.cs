@@ -89,7 +89,9 @@ namespace EM.Repository.Testes
 
             repositorioAluno.Update(alunoAux);
 
-            Assert.True(aluno.Equals(alunoAux) && repositorioAluno.GetByContendoNoNome("Raimunda").Single().Equals(alunoAux));
+            //TODO: COMPARAR O QUE FOI MUDADO E O EQUALS SÓ COMPARA A MATRÍCULA NESTE OBJETO
+            Assert.True(aluno.Equals(alunoAux) && 
+                repositorioAluno.GetByContendoNoNome("Raimunda").First().Equals(alunoAux));
         }
 
         [Fact(DisplayName = "Atualizar aluno inexistente do repositório")]
