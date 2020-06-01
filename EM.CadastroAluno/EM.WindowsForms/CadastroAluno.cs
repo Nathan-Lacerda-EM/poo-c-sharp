@@ -230,20 +230,26 @@ namespace EM.WindowsForms
 
         private void mtbNascimento_TextChanged(object sender, EventArgs e)
         {
-            if (DateTime.TryParse(mtbNascimento.Text, out DateTime dataDeNascimento) && mtbNascimento.TextLength == 10)
+            if (mtbNascimento.Text.Replace(" ", "").Length == 10)
             {
+                var data = DateTime.TryParse(mtbNascimento.Text, out DateTime dataDeNascimento);
+
+                if (!data)
+                {
+                    MostreErroNaTelaDoUsuario("Data de nascimento inválida!", "Validação de data de nascimento");
+                    mtbNascimento.ResetText();
+                    mtbNascimento.Focus();
+                }
+
                 if (dataDeNascimento.CompareTo(DateTime.Now) > 0)
                 {
                     MostreErroNaTelaDoUsuario("Data de nascimento não pode ser uma data futura!",
                         "Validação de data de nascimento");
                     mtbNascimento.ResetText();
                     mtbNascimento.Focus();
+                    return;
                 }
-                return;
             }
-            MostreErroNaTelaDoUsuario("Data de nascimento inválida!", "Validação de data de nascimento");
-            mtbNascimento.ResetText();
-            mtbNascimento.Focus();
         }
 
         private void txtPesquisar_KeyDown(object sender, KeyEventArgs e)
