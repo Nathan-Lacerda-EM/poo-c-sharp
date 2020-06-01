@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic.CompilerServices;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using static EM.Domain.Utils;
 
@@ -31,9 +30,13 @@ namespace EM.Domain
             set
             {
                 if (value.ToString().Length > 9)
+                {
                     throw new ValidationException("Tamanho de matrícula excede o máximo (9).");
+                }
                 else
+                {
                     _matricula = value;
+                }
             }
         }
 
@@ -42,14 +45,22 @@ namespace EM.Domain
             get => _nome;
             set
             {
-                if(value == null)
+                if (value == null)
+                {
                     throw new ValidationException("O nome deve ter pelo menos um caractere.");
+                }
                 else if (value.Length > 100)
+                {
                     throw new ValidationException("Tamanho de nome deve ser menor ou igual a 100 caracteres.");
+                }
                 else if (value.Length < 1)
+                {
                     throw new ValidationException("Tamanho de nome deve ser maior ou igual a 1.");
+                }
                 else
+                {
                     _nome = value;
+                }
             }
         }
 
@@ -60,11 +71,17 @@ namespace EM.Domain
             {
                 const int anoMinimo = 1900;
                 if (value.CompareTo(DateTime.Today) <= 0 && value.Year >= anoMinimo)
+                {
                     _nascimento = value;
-                else if(value.Year < anoMinimo)
+                }
+                else if (value.Year < anoMinimo)
+                {
                     throw new ValidationException("Ano deve ser maior que 1900!");
+                }
                 else
+                {
                     throw new ValidationException("Data deve ser igual ou anterior ao dia de hoje!");
+                }
             }
         }
         public EnumeradorDeSexo Sexo
@@ -78,20 +95,35 @@ namespace EM.Domain
             get => FormatarCPF(_cpf);
             set
             {
-                if (ValideCpf(value))
+                if (EhCPFValido(value))
+                {
                     _cpf = LimparCPF(value);
+                }
                 else if (value.Length > 0)
+                {
                     throw new ValidationException("CPF inválido!");
+                }
                 else
+                {
                     _cpf = "";
+                }
             }
         }
 
-        public override bool Equals(Object obj) => (obj is Aluno aluno && this.Matricula == aluno.Matricula);
+        public override bool Equals(object obj)
+        {
+            return (obj is Aluno aluno && Matricula == aluno.Matricula);
+        }
 
-        public override int GetHashCode() => this.Matricula;
+        public override int GetHashCode()
+        {
+            return Matricula;
+        }
 
-        public override string ToString() => $"[Matrícula: {Matricula}], [Nome: \"{Nome}\"], " +
-            $"[Sexo: {Sexo}], [Nascimento: {Nascimento.ToShortDateString()}], [CPF: {CPF}]";
+        public override string ToString()
+        {
+            return $"[Matrícula: {Matricula}], [Nome: \"{Nome}\"], " +
+$"[Sexo: {Sexo}], [Nascimento: {Nascimento.ToShortDateString()}], [CPF: {CPF}]";
+        }
     }
 }

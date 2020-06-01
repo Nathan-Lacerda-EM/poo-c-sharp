@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 using Xunit;
 using static EM.Domain.Utils;
 
@@ -8,7 +7,7 @@ namespace EM.Domain.Testes
 {
     public class AlunoTestes
     {
-        private Aluno aluno = new Aluno();
+        private readonly Aluno aluno = new Aluno();
 
         /*
          * TESTE MATRÍCULA
@@ -17,7 +16,7 @@ namespace EM.Domain.Testes
         [Fact(DisplayName = "Teste Set Matrícula")]
         public void SetMatricula_NaoRespeitaTamanho_RetornaFormatException()
         {
-            var exception = Assert.Throws<ValidationException>(() => aluno.Matricula = 1234567891);
+            ValidationException exception = Assert.Throws<ValidationException>(() => aluno.Matricula = 1234567891);
             Assert.Equal("Tamanho de matrícula excede o máximo (9).", exception.Message);
         }
 
@@ -28,21 +27,21 @@ namespace EM.Domain.Testes
         [Fact(DisplayName = "Teste Set Nome Vazio")]
         public void SetNome_NomeVazio_RetornaValidationException()
         {
-            var exception = Assert.Throws<ValidationException>(() => aluno.Nome = null);
+            ValidationException exception = Assert.Throws<ValidationException>(() => aluno.Nome = null);
             Assert.Equal("O nome deve ter pelo menos um caractere.", exception.Message);
         }
 
         [Fact(DisplayName = "Teste Set Nome maior que 100")]
         public void SetNome_NomeMaiorQue100_RetornaValidationException()
         {
-            var exception = Assert.Throws<ValidationException>(() => aluno.Nome = new string('a', 101));
+            ValidationException exception = Assert.Throws<ValidationException>(() => aluno.Nome = new string('a', 101));
             Assert.Equal("Tamanho de nome deve ser menor ou igual a 100 caracteres.", exception.Message);
         }
 
         [Fact(DisplayName = "Teste Set Nome menor que 1")]
         public void SetNome_NomeMenorQue1_RetornaValidationException()
         {
-            var exception = Assert.Throws<ValidationException>(() => aluno.Nome = "");
+            ValidationException exception = Assert.Throws<ValidationException>(() => aluno.Nome = "");
             Assert.Equal("Tamanho de nome deve ser maior ou igual a 1.", exception.Message);
         }
 
@@ -57,14 +56,14 @@ namespace EM.Domain.Testes
         [Fact(DisplayName = "Teste Set Nascimento data maior que hoje")]
         public void SetNascimentoDataMaior_NaoEhDataValida_RetornaValidationException()
         {
-            var exception = Assert.Throws<ValidationException>(() => aluno.Nascimento = DateTime.Now.AddDays(1));
+            ValidationException exception = Assert.Throws<ValidationException>(() => aluno.Nascimento = DateTime.Now.AddDays(1));
             Assert.Equal("Data deve ser igual ou anterior ao dia de hoje!", exception.Message);
         }
 
         [Fact(DisplayName = "Teste Set Nascimento ano menor que 1900")]
         public void SetNascimentoDataMenor_NaoEhDataValida_RetornaValidationException()
         {
-            var exception = Assert.Throws<ValidationException>(() => aluno.Nascimento = new DateTime(1899, 12, 31));
+            ValidationException exception = Assert.Throws<ValidationException>(() => aluno.Nascimento = new DateTime(1899, 12, 31));
             Assert.Equal("Ano deve ser maior que 1900!", exception.Message);
         }
 
@@ -79,7 +78,7 @@ namespace EM.Domain.Testes
         [InlineData("000.111.111-01")]
         public void SetCPFInvalido(string CPF)
         {
-            var exception = Assert.Throws<ValidationException>(() => aluno.CPF = CPF);
+            ValidationException exception = Assert.Throws<ValidationException>(() => aluno.CPF = CPF);
             Assert.Equal("CPF inválido!", exception.Message);
         }
 
@@ -90,7 +89,7 @@ namespace EM.Domain.Testes
         [InlineData("00011111101")]
         public void SetCPFApenasNumeroInvalido(string CPF)
         {
-            var exception = Assert.Throws<ValidationException>(() => aluno.CPF = CPF);
+            ValidationException exception = Assert.Throws<ValidationException>(() => aluno.CPF = CPF);
             Assert.Equal("CPF inválido!", exception.Message);
         }
 

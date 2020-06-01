@@ -29,7 +29,7 @@ namespace EM.WindowsForms
 
         private void btnAddModificar_Click(object sender, EventArgs e)
         {
-            var erroCampos = EstaCorretoPreenchimentoFormulario();
+            bool erroCampos = EstaCorretoPreenchimentoFormulario();
             if (!erroCampos)
             {
                 return;
@@ -54,7 +54,7 @@ namespace EM.WindowsForms
                 Sexo = (EnumeradorDeSexo)cboSexo.SelectedItem
             };
 
-            if (!ValideCpf(txtCPF.Text) && txtCPF.TextLength > 0)
+            if (!EhCPFValido(txtCPF.Text) && txtCPF.TextLength > 0)
             {
                 MostreErroNaTelaDoUsuario("CPF Inválido!", "Modificação de aluno");
                 return;
@@ -73,40 +73,42 @@ namespace EM.WindowsForms
             txtPesquisa.Focus();
         }
 
-        private void GetCPF(string CPF)
+        private bool ValideCPF(string CPF)
         {
+            if (EhCPFValido(txtCPF.Text) && txtCPF.TextLength > 0)
+            {
+                return true;
+            }
+            else if (txtCPF.TextLength == 0)
+            {
+                return true;
+            }
 
+            return false;
         }
 
-        private void MostreInformacaoNaTelaDoUsuario(string informacao, string tituloBox)
+        private Aluno CrieObjetoAluno(string matricula, string nome, string dataDeNascimento, object sexo, string cpf)
         {
-            MessageBox.Show(informacao, tituloBox,
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return new Aluno
+            {
+                Matricula = Convert.ToInt32(matricula),
+                Nome = nome,
+                Nascimento = Convert.ToDateTime(dataDeNascimento),
+                Sexo = (EnumeradorDeSexo)sexo,
+                CPF = cpf
+            };
         }
 
         private void AdicioneAluno()
         {
-            Aluno aluno = new Aluno
-            {
-                Matricula = int.Parse(txtMatricula.Text),
-                Nome = txtNome.Text,
-                Nascimento = DateTime.Parse(mtbNascimento.Text),
-                Sexo = (EnumeradorDeSexo)cboSexo.SelectedItem
-            };
-
-            if (ValideCpf(txtCPF.Text) && txtCPF.TextLength > 0)
-            {
-                aluno.CPF = txtCPF.Text;
-            }
-            else if (txtCPF.TextLength == 0)
-            {
-                aluno.CPF = "";
-            }
-            else
+            string cpf = txtCPF.Text;
+            if (!ValideCPF(cpf))
             {
                 MostreErroNaTelaDoUsuario("CPF Inválido!", "Cadastro de aluno");
                 return;
             }
+
+            Aluno aluno = CrieObjetoAluno(txtMatricula.Text, txtNome.Text, mtbNascimento.Text, cboSexo.SelectedItem, cpf);
 
             try
             {
@@ -124,8 +126,7 @@ namespace EM.WindowsForms
             AtualizeDataGridView();
             LimpeFormulario();
 
-            MessageBox.Show("Aluno adicionado com sucesso!", "Cadastro de aluno",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MostreInformacaoNaTelaDoUsuario("Aluno adicionado com sucesso!", "Cadastro de aluno");
             txtMatricula.Focus();
         }
 
@@ -209,8 +210,7 @@ namespace EM.WindowsForms
 
                 AtualizeDataGridView();
 
-                MessageBox.Show("Aluno excluído!", "Exclusão de aluno",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MostreInformacaoNaTelaDoUsuario("Aluno excluído!", "Exclusão de aluno");
                 txtPesquisa.Focus();
             }
         }
@@ -452,7 +452,14 @@ namespace EM.WindowsForms
             return true;
         }
 
-        private void MostreErroNaTelaDoUsuario(string erro, string tituloBox) => MessageBox.Show(erro, tituloBox,
-            MessageBoxButtons.OK, MessageBoxIcon.Error);
+        private void MostreErroNaTelaDoUsuario(string erro, string tituloBox)
+        {
+            MessageBox.Show(erro, tituloBox, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void MostreInformacaoNaTelaDoUsuario(string informacao, string tituloBox)
+        {
+            MessageBox.Show(informacao, tituloBox, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
     }
 }
