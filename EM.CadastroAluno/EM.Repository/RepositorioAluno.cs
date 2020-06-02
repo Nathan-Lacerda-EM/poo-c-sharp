@@ -9,137 +9,105 @@ namespace EM.Repository
 {
     public class RepositorioAluno : RepositorioAbstrato<Aluno>
     {
-        private readonly List<Aluno> repositorioAlunos;
-
-        public RepositorioAluno()
-        {
-            repositorioAlunos = new List<Aluno>();
-        }
-
         public override void Add(Aluno aluno)
         {
-            IEnumerable<Aluno> alunos =
-                from outroAluno in repositorioAlunos
-                where outroAluno.Equals(aluno) || (aluno.CPF == outroAluno.CPF && aluno.CPF != "Sem CPF." &&
-                    outroAluno.CPF != "Sem CPF.")
-                select outroAluno;
+            var colecaoDeAlunos = Get(alunoDoRepositorio =>
+                alunoDoRepositorio.Equals(aluno) ||
+                (aluno.CPF == alunoDoRepositorio.CPF &&
+                aluno.CPF != "Sem CPF." &&
+                alunoDoRepositorio.CPF != "Sem CPF."));
 
-            if (alunos.Count() > 0)
+            if (colecaoDeAlunos.Count() > 0)
             {
                 throw new Exception("Aluno ou CPF já registrado!");
             }
 
-            repositorioAlunos.Add(aluno);
+            repositorio.Add(aluno);
         }
 
         public override void Remove(Aluno aluno)
         {
-            IEnumerable<Aluno> alunos =
-                from outroAluno in repositorioAlunos
-                where outroAluno.Equals(aluno)
-                select outroAluno;
+            var colecaoDeAlunos = Get(alunoDoRepositorio => alunoDoRepositorio.Equals(aluno));
 
-            if (alunos.Count() == 0)
+            if (colecaoDeAlunos.Count() == 0)
             {
                 throw new Exception("Aluno não encontrado!");
             }
 
-            repositorioAlunos.Remove(alunos.Single());
+            repositorio.Remove(colecaoDeAlunos.First());
         }
 
         public override void Update(Aluno aluno)
         {
-            IEnumerable<Aluno> alunos =
-                from alunoAtualizado in repositorioAlunos
-                where alunoAtualizado.Equals(aluno)
-                select alunoAtualizado;
+            var colecaoDeAlunos = Get(alunoDoRepositorio => alunoDoRepositorio.Equals(aluno));
 
-            if (alunos.Count() == 0)
+            if (colecaoDeAlunos.Count() == 0)
             {
                 throw new Exception("Aluno não encontrado!");
             }
 
-            IEnumerable<Aluno> alunosCPF =
-                from a in repositorioAlunos
-                where !a.Equals(aluno) && (aluno.CPF == a.CPF && aluno.CPF != "Sem CPF." && a.CPF != "Sem CPF.")
-                select a;
+            var colecaoDeAlunosCPF = Get(alunoDoRepositorio =>
+                !alunoDoRepositorio.Equals(aluno) &&
+                (aluno.CPF == alunoDoRepositorio.CPF &&
+                aluno.CPF != "Sem CPF." &&
+                alunoDoRepositorio.CPF != "Sem CPF."));
 
-            if (alunosCPF.Count() > 0)
+            if (colecaoDeAlunosCPF.Count() > 0)
             {
                 throw new Exception("CPF já registrado!");
             }
 
-            repositorioAlunos.Remove(alunos.First());
-            repositorioAlunos.Add(aluno);
+            repositorio.Remove(colecaoDeAlunos.First());
+            repositorio.Add(aluno);
         }
 
         public override IEnumerable<Aluno> GetAll()
         {
-            IOrderedEnumerable<Aluno> alunos =
-                from aluno in repositorioAlunos
+            var colecaoDeAlunos =
+                from aluno in repositorio
                 orderby aluno.Matricula
                 select aluno;
 
-            if (alunos.Count() > 0)
-            {
-                return alunos;
-            }
-            else
+            if (colecaoDeAlunos.Count() == 0)
             {
                 throw new Exception("Não existe nenhum aluno no repositório!");
             }
+
+            return colecaoDeAlunos;
         }
 
         public override IEnumerable<Aluno> Get(Expression<Func<Aluno, bool>> predicate)
         {
-            Func<Aluno, bool> method = predicate.Compile();
-            IEnumerable<Aluno> alunos =
-                from aluno in repositorioAlunos
-                where method.Invoke(aluno)
-                select aluno;
+            Func<Aluno, bool> expressao = predicate.Compile();
 
-            if (alunos.Count() > 0)
-            {
-                return alunos;
-            }
-            else
-            {
-                throw new Exception("Esse aluno não existe!");
-            }
+            return from aluno in repositorio
+                   where expressao.Invoke(aluno)
+                   select aluno;
         }
 
         public Aluno GetByMatricula(int matricula)
         {
-            IEnumerable<Aluno> alunos =
-                from aluno in repositorioAlunos
-                where aluno.Matricula == matricula
-                select aluno;
+            var colecaoDeAlunos = Get(alunoDoRepositorio => alunoDoRepositorio.Matricula == matricula);
 
-            if (alunos.Count() > 0)
-            {
-                return alunos.First();
-            }
-            else
+            if (colecaoDeAlunos.Count() == 0)
             {
                 throw new Exception("Não existe nenhum aluno com essa matrícula!");
             }
+
+            return colecaoDeAlunos.First();
         }
 
         public IEnumerable<Aluno> GetByContendoNoNome(string parteDoNome)
         {
-            IEnumerable<Aluno> alunos =
-                from aluno in repositorioAlunos
-                where RemoverAcentosEUppercase(aluno.Nome).Contains(RemoverAcentosEUppercase(parteDoNome))
-                select aluno;
+            var colecaoDeAlunos = Get(alunoDoRepositorio =>
+                RemovaAcentosEUppercase(alunoDoRepositorio.Nome).Contains(RemovaAcentosEUppercase(parteDoNome)));
 
-            if (alunos.Count() > 0)
-            {
-                return alunos;
-            }
-            else
+            if (colecaoDeAlunos.Count() == 0)
             {
                 throw new Exception("Não existe nenhum aluno com esse nome!");
             }
+
+            return colecaoDeAlunos;
         }
     }
 }
