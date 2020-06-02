@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Update="C:\Users\Escolar Manager\source\repos\poo-c-sharp\EM.CadastroAluno\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
 </Project>

@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EM.Repository", "EM.Reposit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EM.Repository.Testes", "EM.Repository.Testes\EM.Repository.Testes.csproj", "{0B7D8813-B5C7-47C7-A151-6464BF1B7E9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EM.WindowsForms", "EM.WindowsForms\EM.WindowsForms.csproj", "{1D633E92-1792-420A-9557-1BE565C4E952}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EM.WindowsForms", "EM.WindowsForms\EM.WindowsForms.csproj", "{1D633E92-1792-420A-9557-1BE565C4E952}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
