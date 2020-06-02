@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace EM.WindowsForms
 {
-    public class Principal : Form
+    public class Principal
     {
         /// <summary>
         ///  The main entry point for the application.
