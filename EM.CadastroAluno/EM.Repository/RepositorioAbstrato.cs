@@ -7,6 +7,7 @@ namespace EM.Repository
 {
     public abstract class RepositorioAbstrato<T> where T : IEntidade
     {
+        protected readonly List<T> repositorio = new List<T>();
         public abstract void Add(T objeto);
         public abstract void Remove(T objeto);
         public abstract void Update(T objeto);
