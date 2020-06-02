@@ -2,6 +2,7 @@
 {
     public enum EnumeradorDeSexo
     {
-        Masculino, Feminino
+        Masculino,
+        Feminino
     }
 }
