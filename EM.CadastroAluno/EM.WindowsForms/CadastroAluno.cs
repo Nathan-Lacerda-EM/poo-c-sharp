@@ -21,9 +21,9 @@ namespace EM.WindowsForms
         {
             cboSexo.Items.Add(EnumeradorDeSexo.Masculino);
             cboSexo.Items.Add(EnumeradorDeSexo.Feminino);
-            // Can be used too: cboSexo.Items.AddRange(Enum.GetValues(typeof(EnumeradorDeSexo)));
+            // Pode ser usado também: cboSexo.Items.AddRange(Enum.GetValues(typeof(EnumeradorDeSexo)));
 
-            SetupDGVAlunos();
+            ConfigureDataGridView();
             AtualizeDataGridView();
         }
 
@@ -43,35 +43,6 @@ namespace EM.WindowsForms
             AdicioneAluno();
         }
 
-        private void ModifiqueAluno()
-        {
-            Aluno aluno = new Aluno
-            {
-                Matricula = int.Parse(txtMatricula.Text),
-                Nome = txtNome.Text,
-                Nascimento = DateTime.Parse(mtbNascimento.Text),
-                Sexo = (EnumeradorDeSexo)cboSexo.SelectedItem
-            };
-
-            if (!EhCPFValido(txtCPF.Text) && txtCPF.TextLength > 0)
-            {
-                MostreErroNaTelaDoUsuario("CPF Inválido!", "Modificação de aluno");
-                return;
-            }
-            else if (txtCPF.TextLength == 0)
-            {
-                aluno.CPF = txtCPF.Text;
-            }
-
-            _repoAluno.Update(aluno);
-
-            AtualizeDataGridView();
-            AjusteEstadoControlesEmEdicao(false);
-
-            MostreInformacaoNaTelaDoUsuario("Aluno modificado com sucesso!", "Modificação de aluno");
-            txtPesquisa.Focus();
-        }
-
         private void btnEditar_Click(object sender, EventArgs e)
         {
             if (dgvAlunos.CurrentRow == null)
@@ -81,13 +52,14 @@ namespace EM.WindowsForms
                 return;
             }
 
-            AjusteCampos(
+            AjusteCamposFormulario(
                 Convert.ToString(dgvAlunos.CurrentRow.Cells["Matrícula"].Value),
                 (string)dgvAlunos.CurrentRow.Cells["Nome"].Value,
                 (string)dgvAlunos.CurrentRow.Cells["CPF"].Value,
                 Convert.ToInt32(dgvAlunos.CurrentRow.Cells["Sexo"].Value),
                 ((DateTime)dgvAlunos.CurrentRow.Cells["Nascimento"].Value).ToShortDateString()
             );
+
             AjusteEstadoControlesEmEdicao(true);
         }
 
@@ -140,20 +112,19 @@ namespace EM.WindowsForms
                 return;
             }
 
-            DialogResult result = MessageBox.Show("Tem certeza que quer excluir este aluno?", "Exclusão de Aluno",
+            var result = MessageBox.Show("Tem certeza que quer excluir este aluno?", "Exclusão de Aluno",
                                          MessageBoxButtons.YesNo,
                                          MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
-                int matricula = Convert.ToInt32(dgvAlunos.CurrentRow.Cells["Matrícula"].Value);
+                var matricula = Convert.ToInt32(dgvAlunos.CurrentRow.Cells["Matrícula"].Value);
 
                 _repoAluno.Remove(_repoAluno.GetByMatricula(matricula));
 
                 AtualizeDataGridView();
 
                 MostreInformacaoNaTelaDoUsuario("Aluno excluído!", "Exclusão de aluno");
-                txtPesquisa.Focus();
             }
         }
 
@@ -174,13 +145,14 @@ namespace EM.WindowsForms
         {
             if (mtbNascimento.Text.Replace(" ", "").Length == 10)
             {
-                bool data = DateTime.TryParse(mtbNascimento.Text, out DateTime dataDeNascimento);
+                var data = DateTime.TryParse(mtbNascimento.Text, out DateTime dataDeNascimento);
 
                 if (!data)
                 {
                     MostreErroNaTelaDoUsuario("Data de nascimento inválida!", "Validação de data de nascimento");
                     mtbNascimento.ResetText();
                     mtbNascimento.Focus();
+                    return;
                 }
 
                 if (dataDeNascimento.CompareTo(DateTime.Now) > 0)
@@ -189,7 +161,6 @@ namespace EM.WindowsForms
                         "Validação de data de nascimento");
                     mtbNascimento.ResetText();
                     mtbNascimento.Focus();
-                    return;
                 }
             }
         }
@@ -233,6 +204,7 @@ namespace EM.WindowsForms
             {
                 return;
             }
+
             e.Handled = true;
         }
 
@@ -263,73 +235,53 @@ namespace EM.WindowsForms
             {
                 _bs.DataSource = _repoAluno.GetAll();
             }
-            catch (Exception exc)
+            catch (Exception excecao)
             {
-                if (exc.Message == "Não existe nenhum aluno no repositório!")
+                if (excecao.Message == "Não existe nenhum aluno no repositório!")
                 {
                     _bs.DataSource = null;
                     return;
                 }
 
-                DialogResult result = MessageBox.Show(exc.Message + "\n\nVer erro completo?", "Erro desconhecido",
+                var resultadoMessageBox = MessageBox.Show(excecao.Message + "\n\nVer erro completo?", "Erro desconhecido",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Error);
 
-                if (result == DialogResult.Yes)
+                if (resultadoMessageBox == DialogResult.Yes)
                 {
-                    new TelaErro(exc);
+                    new TelaErro(excecao);
                 }
             }
         }
 
-        private void SetupDGVAlunos()
+        private void ConfigureDataGridView()
         {
             dgvAlunos.AutoGenerateColumns = false;
             dgvAlunos.DataSource = _bs;
 
-            DataGridViewColumn clmMatricula = new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "Matricula",
-                Name = "Matrícula"
-            };
-            dgvAlunos.Columns.Add(clmMatricula);
-
-            DataGridViewColumn clmNome = new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "Nome",
-                Name = "Nome"
-            };
-            dgvAlunos.Columns.Add(clmNome);
-
-            DataGridViewColumn clmSexo = new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "Sexo",
-                Name = "Sexo"
-            };
-            dgvAlunos.Columns.Add(clmSexo);
-
-            DataGridViewColumn clmNascimento = new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "Nascimento",
-                Name = "Nascimento"
-            };
-            dgvAlunos.Columns.Add(clmNascimento);
-
-            DataGridViewColumn clmCPF = new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "CPF",
-                Name = "CPF"
-            };
-            dgvAlunos.Columns.Add(clmCPF);
+            CrieColunaNaDataGridView("Matrícula", nameof(Aluno.Matricula));
+            CrieColunaNaDataGridView("Nome", nameof(Aluno.Nome));
+            CrieColunaNaDataGridView("Sexo", nameof(Aluno.Sexo));
+            CrieColunaNaDataGridView("Nascimento", nameof(Aluno.Nascimento));
+            CrieColunaNaDataGridView("CPF", nameof(Aluno.CPF));
 
             dgvAlunos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dgvAlunos.Columns["Nome"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         }
 
-        private void AjusteCampos(string matricula, string nome, string cpf, int sexo, string nascimento)
+        private void CrieColunaNaDataGridView(string nomeDaColuna, string nomeDaPropriedade)
+        {
+            dgvAlunos.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = nomeDaColuna,
+                DataPropertyName = nomeDaPropriedade
+            });
+        }
+
+        private void AjusteCamposFormulario(string matricula, string nome, string cpf, int sexo, string nascimento)
         {
             txtMatricula.Text = matricula;
             txtNome.Text = nome;
-            txtCPF.Text = LimparCPF(cpf);
+            txtCPF.Text = LimpeCPF(cpf);
             cboSexo.SelectedIndex = sexo;
             mtbNascimento.Text = nascimento;
         }
@@ -346,19 +298,18 @@ namespace EM.WindowsForms
                 btnExcluir.Enabled = false;
                 btnEditar.Enabled = false;
                 btnPesquisa.Enabled = false;
+                return;
             }
-            else
-            {
-                estadoCadastro.Text = "Novo aluno";
-                btnLimpaCancela.Text = "Limpar";
-                btnAddModificar.Text = "Adicionar";
-                txtMatricula.Enabled = true;
-                txtPesquisa.Enabled = true;
-                btnExcluir.Enabled = true;
-                btnEditar.Enabled = true;
-                btnPesquisa.Enabled = true;
-                LimpeFormulario();
-            }
+
+            estadoCadastro.Text = "Novo aluno";
+            btnLimpaCancela.Text = "Limpar";
+            btnAddModificar.Text = "Adicionar";
+            txtMatricula.Enabled = true;
+            txtPesquisa.Enabled = true;
+            btnExcluir.Enabled = true;
+            btnEditar.Enabled = true;
+            btnPesquisa.Enabled = true;
+            LimpeFormulario();
         }
 
         private void LimpeFormulario()
@@ -428,22 +379,22 @@ namespace EM.WindowsForms
 
         private void AdicioneAluno()
         {
-            string cpf = txtCPF.Text;
+            var cpf = txtCPF.Text;
             if (!ValideCPF(cpf))
             {
                 MostreErroNaTelaDoUsuario("CPF Inválido!", "Cadastro de aluno");
                 return;
             }
 
-            Aluno aluno = CrieObjetoAluno(txtMatricula.Text, txtNome.Text, mtbNascimento.Text, cboSexo.SelectedItem, cpf);
+            var aluno = CrieObjetoAluno(txtMatricula.Text, txtNome.Text, mtbNascimento.Text, cboSexo.SelectedItem, cpf);
 
             try
             {
                 _repoAluno.Add(aluno);
             }
-            catch (Exception ex)
+            catch (Exception excecao)
             {
-                if (ex.Message == "Aluno ou CPF já registrado!")
+                if (excecao.Message == "Aluno ou CPF já registrado!")
                 {
                     MostreErroNaTelaDoUsuario("Aluno ou CPF já registrado!", "Cadastro de aluno");
                     return;
@@ -455,6 +406,25 @@ namespace EM.WindowsForms
 
             MostreInformacaoNaTelaDoUsuario("Aluno adicionado com sucesso!", "Cadastro de aluno");
             txtMatricula.Focus();
+        }
+
+        private void ModifiqueAluno()
+        {
+            var cpf = txtCPF.Text;
+            if (!ValideCPF(cpf))
+            {
+                MostreErroNaTelaDoUsuario("CPF Inválido!", "Modificação de aluno");
+                return;
+            }
+
+            var aluno = CrieObjetoAluno(txtMatricula.Text, txtNome.Text, mtbNascimento.Text, cboSexo.SelectedItem, cpf);
+
+            _repoAluno.Update(aluno);
+
+            AtualizeDataGridView();
+            AjusteEstadoControlesEmEdicao(false);
+
+            MostreInformacaoNaTelaDoUsuario("Aluno modificado com sucesso!", "Modificação de aluno");
         }
 
         private void MostreErroNaTelaDoUsuario(string erro, string tituloBox)
