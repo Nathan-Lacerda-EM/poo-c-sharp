@@ -10,65 +10,69 @@ namespace EM.Domain.Testes
         private readonly Aluno aluno = new Aluno();
 
         /*
-         * TESTE MATRÍCULA
+         * INÍCIO TESTE MATRÍCULA
          */
 
         [Fact(DisplayName = "Teste Set Matrícula")]
         public void SetMatricula_NaoRespeitaTamanho_RetornaFormatException()
         {
-            ValidationException exception = Assert.Throws<ValidationException>(() => aluno.Matricula = 1234567891);
-            Assert.Equal("Tamanho de matrícula excede o máximo (9).", exception.Message);
+            var excecaoValidacao = Assert.Throws<ValidationException>(() => aluno.Matricula = 1234567891);
+            Assert.Equal("Tamanho de matrícula excede o máximo (9).", excecaoValidacao.Message);
         }
 
         /*
-         * TESTE NOME
+         * INÍCIO TESTE NOME
          */
 
         [Fact(DisplayName = "Teste Set Nome Vazio")]
         public void SetNome_NomeVazio_RetornaValidationException()
         {
-            ValidationException exception = Assert.Throws<ValidationException>(() => aluno.Nome = null);
-            Assert.Equal("O nome deve ter pelo menos um caractere.", exception.Message);
+            var excecaoValidacao = Assert.Throws<ValidationException>(() => aluno.Nome = null);
+            Assert.Equal("O nome deve ter pelo menos um caractere.", excecaoValidacao.Message);
         }
 
         [Fact(DisplayName = "Teste Set Nome maior que 100")]
         public void SetNome_NomeMaiorQue100_RetornaValidationException()
         {
-            ValidationException exception = Assert.Throws<ValidationException>(() => aluno.Nome = new string('a', 101));
-            Assert.Equal("Tamanho de nome deve ser menor ou igual a 100 caracteres.", exception.Message);
+            var excecaoValidacao = Assert.Throws<ValidationException>(() => aluno.Nome = new string('a', 101));
+            Assert.Equal("Tamanho de nome deve ser menor ou igual a 100 caracteres.", excecaoValidacao.Message);
         }
 
         [Fact(DisplayName = "Teste Set Nome menor que 1")]
         public void SetNome_NomeMenorQue1_RetornaValidationException()
         {
-            ValidationException exception = Assert.Throws<ValidationException>(() => aluno.Nome = "");
-            Assert.Equal("Tamanho de nome deve ser maior ou igual a 1.", exception.Message);
+            var excecaoValidacao = Assert.Throws<ValidationException>(() => aluno.Nome = "");
+            Assert.Equal("Tamanho de nome deve ser maior ou igual a 1.", excecaoValidacao.Message);
         }
 
         /*
          * FIM TESTE NOME
-         */
-
-        /*
-         * TESTE NASCIMENTO
+         *
+        
+         *
+         * INÍCIO TESTE NASCIMENTO
          */
 
         [Fact(DisplayName = "Teste Set Nascimento data maior que hoje")]
         public void SetNascimentoDataMaior_NaoEhDataValida_RetornaValidationException()
         {
-            ValidationException exception = Assert.Throws<ValidationException>(() => aluno.Nascimento = DateTime.Now.AddDays(1));
-            Assert.Equal("Data deve ser igual ou anterior ao dia de hoje!", exception.Message);
+            var excecaoValidacao = Assert.Throws<ValidationException>(() => aluno.Nascimento = DateTime.Now.AddDays(1));
+            Assert.Equal("Data deve ser igual ou anterior ao dia de hoje!", excecaoValidacao.Message);
         }
 
         [Fact(DisplayName = "Teste Set Nascimento ano menor que 1900")]
         public void SetNascimentoDataMenor_NaoEhDataValida_RetornaValidationException()
         {
-            ValidationException exception = Assert.Throws<ValidationException>(() => aluno.Nascimento = new DateTime(1899, 12, 31));
-            Assert.Equal("Ano deve ser maior que 1900!", exception.Message);
+            var excecaoValidacao = Assert.Throws<ValidationException>(() => aluno.Nascimento = new DateTime(1899, 12, 31));
+            Assert.Equal("Ano deve ser maior que 1900!", excecaoValidacao.Message);
         }
 
         /*
-         * TESTE CPF
+         * FIM TESTE NASCIMENTO
+         *
+        
+         *
+         * INÍCIO TESTE CPF
          */
 
         [Theory(DisplayName = "Teste Set CPF inválido")]
@@ -76,10 +80,10 @@ namespace EM.Domain.Testes
         [InlineData("123.321.321-44")]
         [InlineData("451.111.222-33")]
         [InlineData("000.111.111-01")]
-        public void SetCPFInvalido(string CPF)
+        public void SetCPFInvalido(string cpf)
         {
-            ValidationException exception = Assert.Throws<ValidationException>(() => aluno.CPF = CPF);
-            Assert.Equal("CPF inválido!", exception.Message);
+            var excecaoValidacao = Assert.Throws<ValidationException>(() => aluno.CPF = cpf);
+            Assert.Equal("CPF inválido!", excecaoValidacao.Message);
         }
 
         [Theory(DisplayName = "Teste Set CPF apenas número inválido")]
@@ -87,10 +91,10 @@ namespace EM.Domain.Testes
         [InlineData("12332132144")]
         [InlineData("45111122233")]
         [InlineData("00011111101")]
-        public void SetCPFApenasNumeroInvalido(string CPF)
+        public void SetCPFApenasNumeroInvalido(string cpf)
         {
-            ValidationException exception = Assert.Throws<ValidationException>(() => aluno.CPF = CPF);
-            Assert.Equal("CPF inválido!", exception.Message);
+            var excecaoValidacao = Assert.Throws<ValidationException>(() => aluno.CPF = cpf);
+            Assert.Equal("CPF inválido!", excecaoValidacao.Message);
         }
 
         [Theory(DisplayName = "Teste Set & Get CPF")]
@@ -99,21 +103,21 @@ namespace EM.Domain.Testes
         [InlineData("508.645.970-29")]
         [InlineData("200.219.970-12")]
         [InlineData("981.283660-84")]
-        public void GetCPF(string CPF)
+        public void GetCPF(string cpf)
         {
-            aluno.CPF = CPF;
-            Assert.Equal(aluno.CPF, FormatarCPF(CPF));
+            aluno.CPF = cpf;
+            Assert.Equal(aluno.CPF, FormateCPF(cpf));
         }
 
         /*
          * FIM TESTE CPF
+         *
+
+         *
+         * TESTE FUNÇÃO ToString()
          */
 
-        /*
-         * TESTE ToString()
-         */
-
-        [Fact(DisplayName = "Teste ToString()")]
+        [Fact(DisplayName = "Teste da função ToString()")]
         public void MetodoToString()
         {
             aluno.Matricula = 201800774;
@@ -126,10 +130,10 @@ namespace EM.Domain.Testes
         }
 
         /*
-         * TESTE Equals()
+         * TESTE FUNÇÃO Equals()
          */
 
-        [Fact(DisplayName = "Teste Equals()")]
+        [Fact(DisplayName = "Teste da função Equals()")]
         public void MetodoEquals()
         {
             aluno.Matricula = 201800774;
@@ -137,7 +141,7 @@ namespace EM.Domain.Testes
             aluno.CPF = "489.751.630-75";
             aluno.Nascimento = new DateTime(1999, 7, 5);
             aluno.Sexo = EnumeradorDeSexo.Masculino;
-            Aluno newAluno = new Aluno(201800774, "Nathan Lacerda", "48975163075",
+            var newAluno = new Aluno(201800774, "Nathan Lacerda", "48975163075",
                 new DateTime(1999, 7, 5), EnumeradorDeSexo.Masculino);
             Assert.True(aluno.Equals(newAluno) && newAluno.Equals(aluno));
         }
