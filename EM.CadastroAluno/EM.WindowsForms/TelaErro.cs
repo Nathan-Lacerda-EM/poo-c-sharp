@@ -5,7 +5,6 @@ namespace EM.WindowsForms
 {
     public partial class TelaErro : Form
     {
-
         public TelaErro(Exception exc)
         {
             InitializeComponent();
