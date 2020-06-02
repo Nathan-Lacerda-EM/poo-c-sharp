@@ -6,10 +6,8 @@ namespace EM.Domain
 {
     public class Utils
     {
-        //Source: https://gabrielrb.net/2011/10/11/validar-cpf-em-csharp/
-        public static bool EhCPFValido(string cpf)
+        public static bool EhCPFValido(string cpf) //Source: https://gabrielrb.net/2011/10/11/validar-cpf-em-csharp/
         {
-
             int[] multiplicador1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
             int[] multiplicador2 = new int[10] { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
             string tempCpf;
@@ -68,44 +66,43 @@ namespace EM.Domain
             return cpf.EndsWith(digito);
         }
 
-        public static string FormatarCPF(string CPF)
+        public static string FormateCPF(string cpf)
         {
-            if (CPF != null && CPF.Length > 0)
+            if (cpf != null && cpf.Length > 0)
             {
-                return Convert.ToUInt64(LimparCPF(CPF)).ToString(@"000\.000\.000\-00"); //Obrigado StackOverflow
+                return Convert.ToUInt64(LimpeCPF(cpf)).ToString(@"000\.000\.000\-00");
             }
-            else if (CPF.Equals("Sem CPF."))
-            {
-                return "";
-            }
-            else
-            {
-                return "Sem CPF.";
-            }
-        }
-
-        public static string LimparCPF(string CPF)
-        {
-            if (CPF.Equals("Sem CPF."))
+            else if (cpf == "Sem CPF.")
             {
                 return "";
             }
 
-            return CPF.Trim().Replace(".", "").Replace("-", "");
+            return "Sem CPF.";
         }
 
-        public static string RemoverAcentosEUppercase(string text)
+        public static string LimpeCPF(string cpf)
         {
-            StringBuilder sb = new StringBuilder();
-            char[] textoArray = text.Normalize(NormalizationForm.FormD).ToCharArray();
-            foreach (char letter in textoArray)
+            if (cpf == "Sem CPF.")
             {
-                if (CharUnicodeInfo.GetUnicodeCategory(letter) != UnicodeCategory.NonSpacingMark)
+                return "";
+            }
+
+            return cpf.Trim().Replace(".", "").Replace("-", "");
+        }
+
+        public static string RemovaAcentosEUppercase(string texto)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            char[] arrayDeTexto = texto.Normalize(NormalizationForm.FormD).ToCharArray();
+            foreach (char letra in arrayDeTexto)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(letra) != UnicodeCategory.NonSpacingMark)
                 {
-                    sb.Append(letter);
+                    stringBuilder.Append(letra);
                 }
             }
-            return sb.ToString().ToLower();
+
+            return stringBuilder.ToString().ToLower();
         }
     }
 }
