@@ -12,13 +12,13 @@ namespace EM.Domain
         private DateTime _nascimento;
         private EnumeradorDeSexo _sexo;
 
-        public Aluno(int Matricula, string Nome, string CPF, DateTime Nascimento, EnumeradorDeSexo Sexo)
+        public Aluno(int matricula, string nome, string cpf, DateTime nascimento, EnumeradorDeSexo sexo)
         {
-            this.Matricula = Matricula;
-            this.Nome = Nome;
-            this.CPF = CPF;
-            this.Nascimento = Nascimento;
-            this.Sexo = Sexo;
+            Matricula = matricula;
+            Nome = nome;
+            CPF = cpf;
+            Nascimento = nascimento;
+            Sexo = sexo;
         }
 
         public int Matricula
