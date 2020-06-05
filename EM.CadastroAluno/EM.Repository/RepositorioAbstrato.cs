@@ -1,9 +1,6 @@
 ﻿using EM.Domain;
-using FirebirdSql.Data.FirebirdClient;
-using FirebirdSql.Data.Isql;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq.Expressions;
 
 namespace EM.Repository
