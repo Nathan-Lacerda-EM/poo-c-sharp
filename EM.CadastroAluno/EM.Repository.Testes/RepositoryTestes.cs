@@ -1,12 +1,35 @@
 using EM.Domain;
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace EM.Repository.Testes
 {
-    public class RepositoryTestes
+
+    public class RepositoryTestes : IDisposable
     {
+        private GerenciadorBancoDeDados _gerenciadorBancoDeDados;
+
+        public RepositoryTestes()
+        {
+            GerenciadorBancoDeDados.bancoDeTeste = true;
+            _gerenciadorBancoDeDados = GerenciadorBancoDeDados.GetInstancia;
+            _gerenciadorBancoDeDados.EsvaziarBancoDeTestes();
+        }
+
+        public void Dispose()
+        {
+            _ = Task.Run(() =>
+              {
+                  Thread.Sleep(1500);
+                  _gerenciadorBancoDeDados.RemovaBancoDeTestes();
+              });
+        }
+
         /*
          * INÍCIO TESTE ADIÇÃO
          * UTILIZANDO aluno
@@ -26,7 +49,7 @@ namespace EM.Repository.Testes
         [Fact(DisplayName = "Adicionar aluno que já existe no repositório")]
         public void Adicionar_Aluno_Existente_No_Repositorio()
         {
-            var aluno = new Aluno(201800774, "Nathan Lacerda", "48975163075",
+            var aluno = new Aluno(12345698, "Nathan Lacerda", "",
                 new DateTime(1999, 7, 5), EnumeradorDeSexo.Masculino);
 
             var repositorioAluno = new RepositorioAluno();
@@ -48,7 +71,7 @@ namespace EM.Repository.Testes
         [Fact(DisplayName = "Remover aluno do repositório")]
         public void Remover_Aluno_Do_Repositorio()
         {
-            var aluno = new Aluno(201800774, "Nathan Lacerda", "48975163075",
+            var aluno = new Aluno(999999999, "Nathan Lacerda", "",
                 new DateTime(1999, 7, 5), EnumeradorDeSexo.Masculino);
 
             var repositorioAluno = new RepositorioAluno();
@@ -64,7 +87,7 @@ namespace EM.Repository.Testes
         [Fact(DisplayName = "Remover aluno inexistente do repositório")]
         public void Remover_Aluno_Inexistente_Do_Repositorio()
         {
-            var aluno = new Aluno(201800774, "Nathan Lacerda", "48975163075",
+            var aluno = new Aluno(56476, "Nathan Lacerda", "48975163075",
                    new DateTime(1999, 7, 5), EnumeradorDeSexo.Masculino);
 
             var repositorioAluno = new RepositorioAluno();
@@ -108,7 +131,7 @@ namespace EM.Repository.Testes
         [Fact(DisplayName = "Atualizar aluno inexistente no repositório")]
         public void Atualizar_Aluno_Inexistente_No_Repositorio()
         {
-            var aluno = new Aluno(201800774, "Nathan Lacerda", "48975163075",
+            var aluno = new Aluno(201800775, "Nathan Lacerda", "48975163075",
                 new DateTime(1999, 7, 5), EnumeradorDeSexo.Masculino);
 
             var alunoAux = new Aluno(201800773, "Raimunda Maria", "48975163075",
@@ -162,11 +185,9 @@ namespace EM.Repository.Testes
             repositorioAluno.Add(aluno);
             repositorioAluno.Add(alunoAux);
 
-            var repositorioAlunoAux = new RepositorioAluno();
-            repositorioAlunoAux.Add(aluno);
-            repositorioAlunoAux.Add(alunoAux);
+            var colecaoDeAlunos = new List<Aluno> { aluno, alunoAux };
 
-            Assert.Contains(repositorioAluno.GetAll().ToString(), repositorioAlunoAux.GetAll().ToString());
+            Assert.Equal(colecaoDeAlunos.OrderBy(aln => aln.Matricula).ToList(), repositorioAluno.GetAll().ToList());
         }
 
         [Fact(DisplayName = "Retornar todos os alunos do repositório vazio")]
@@ -190,7 +211,7 @@ namespace EM.Repository.Testes
             repositorioAluno.Add(aluno);
             repositorioAluno.Add(alunoAux);
 
-            var alunos = repositorioAluno.Get(alunoDoRepositorio => 
+            var alunos = repositorioAluno.Get(alunoDoRepositorio =>
                              alunoDoRepositorio.Matricula == 201800774 || alunoDoRepositorio.Nome.Contains("Maria"));
 
             Assert.True(alunos.Contains(aluno) && alunos.Contains(alunoAux));
@@ -257,9 +278,8 @@ namespace EM.Repository.Testes
             var excecao = Assert.Throws<Exception>(() => repositorioAluno.GetByContendoNoNome("José"));
             Assert.Equal("Não existe nenhum aluno com esse nome!", excecao.Message);
         }
+        /*
+         * FIM TESTE MÉTODOS
+         */
     }
-
-    /*
-     * FIM TESTE MÉTODOS
-     */
 }
