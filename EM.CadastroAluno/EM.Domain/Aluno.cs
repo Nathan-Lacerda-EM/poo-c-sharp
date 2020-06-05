@@ -21,6 +21,8 @@ namespace EM.Domain
             Sexo = sexo;
         }
 
+        public Aluno() { }
+
         public int Matricula
         {
             get => _matricula;
