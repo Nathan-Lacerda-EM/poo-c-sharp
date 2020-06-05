@@ -1,13 +1,16 @@
 ﻿using EM.Domain;
+using FirebirdSql.Data.FirebirdClient;
+using FirebirdSql.Data.Isql;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq.Expressions;
 
 namespace EM.Repository
 {
     public abstract class RepositorioAbstrato<T> where T : IEntidade
     {
-        protected readonly List<T> repositorio = new List<T>();
+        protected List<T> repositorio = new List<T>();
         public abstract void Add(T objeto);
         public abstract void Remove(T objeto);
         public abstract void Update(T objeto);
