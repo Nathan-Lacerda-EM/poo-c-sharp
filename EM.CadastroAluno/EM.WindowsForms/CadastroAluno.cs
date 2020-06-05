@@ -1,6 +1,7 @@
 ﻿using EM.Domain;
 using EM.Repository;
 using System;
+using System.Data;
 using System.Windows.Forms;
 using static EM.Domain.Utils;
 
@@ -240,6 +241,13 @@ namespace EM.WindowsForms
                 if (excecao.Message == "Não existe nenhum aluno no repositório!")
                 {
                     _bs.DataSource = null;
+
+                    var conexao = GerenciadorBancoDeDados.GetInstancia.GetConexao;
+                    if (conexao.State != ConnectionState.Closed)
+                    {
+                        conexao.Close();
+                    }
+
                     return;
                 }
 
@@ -248,7 +256,8 @@ namespace EM.WindowsForms
 
                 if (resultadoMessageBox == DialogResult.Yes)
                 {
-                    new TelaErro(excecao);
+                    var telaErro = new TelaErro(excecao);
+                    telaErro.Show();
                 }
             }
         }
@@ -365,15 +374,15 @@ namespace EM.WindowsForms
             return false;
         }
 
-        private Aluno CrieObjetoAluno(string matricula, string nome, string dataDeNascimento, object sexo, string cpf)
+        private Aluno CrieObjetoAluno(string matricula, string nome, string cpf, string dataDeNascimento, object sexo)
         {
             return new Aluno
             {
                 Matricula = Convert.ToInt32(matricula),
                 Nome = nome,
+                CPF = cpf,
                 Nascimento = Convert.ToDateTime(dataDeNascimento),
-                Sexo = (EnumeradorDeSexo)sexo,
-                CPF = cpf
+                Sexo = (EnumeradorDeSexo)sexo
             };
         }
 
@@ -386,7 +395,7 @@ namespace EM.WindowsForms
                 return;
             }
 
-            var aluno = CrieObjetoAluno(txtMatricula.Text, txtNome.Text, mtbNascimento.Text, cboSexo.SelectedItem, cpf);
+            var aluno = CrieObjetoAluno(txtMatricula.Text, txtNome.Text, cpf, mtbNascimento.Text, cboSexo.SelectedItem);
 
             try
             {
@@ -417,7 +426,7 @@ namespace EM.WindowsForms
                 return;
             }
 
-            var aluno = CrieObjetoAluno(txtMatricula.Text, txtNome.Text, mtbNascimento.Text, cboSexo.SelectedItem, cpf);
+            var aluno = CrieObjetoAluno(txtMatricula.Text, txtNome.Text, cpf, mtbNascimento.Text, cboSexo.SelectedItem);
 
             _repoAluno.Update(aluno);
 
